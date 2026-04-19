@@ -4,7 +4,7 @@ services:
     env: node
     plan: free
     region: frankfurt
-    buildCommand: npm --prefix backend ci --include=dev && npm --prefix backend run build
+    buildCommand: cd backend && npm ci && npm run build
     startCommand: node backend/dist/main.js
     autoDeploy: true
     healthCheckPath: /health
