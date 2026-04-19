@@ -5,8 +5,8 @@ services:
     plan: free
     region: frankfurt
     rootDir: backend
-    buildCommand: npm ci --include=dev && npm run build
-    startCommand: node dist/main.js
+    buildCommand: npm ci --include=dev
+    startCommand: npm run build && node dist/main.js
     autoDeploy: true
     healthCheckPath: /health
     envVars:
