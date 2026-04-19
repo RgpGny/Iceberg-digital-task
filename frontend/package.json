@@ -10,7 +10,9 @@
     "postinstall": "nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "format": "prettier --write \"**/*.{ts,vue,css,json,md}\""
+    "format": "prettier --write \"**/*.{ts,vue,css,json,md}\"",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@nuxt/ui": "^3.3.7",
@@ -22,10 +24,12 @@
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.15.2",
+    "@playwright/test": "^1.59.1",
     "eslint": "^9.39.4",
     "eslint-flat-config-utils": "2.1.4",
     "eslint-plugin-prettier": "^5.5.5",
-    "prettier": "^3.8.3"
+    "prettier": "^3.8.3",
+    "typescript": "^6.0.3"
   },
   "overrides": {
     "eslint-flat-config-utils": "2.1.4"
