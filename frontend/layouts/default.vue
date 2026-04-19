@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const navLinks = [
-  { label: 'İşlemler', to: '/' },
-  { label: 'Raporlar', to: '/reports' },
+  { label: 'Transactions', to: '/' },
+  { label: 'Reports', to: '/reports' },
 ];
 
 const route = useRoute();
@@ -45,7 +45,7 @@ function isActive(path: string) {
               stroke-linecap="round"
             />
           </svg>
-          Yeni İşlem
+          New Transaction
         </button>
       </div>
     </aside>

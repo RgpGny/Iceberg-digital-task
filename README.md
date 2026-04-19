@@ -9,7 +9,7 @@ Estate-agency transaction lifecycle + automatic commission distribution.
 ## Live URLs
 
 - **API:** https://iceberg-api-8s7s.onrender.com
-- **Frontend:** https://frontend-rouge-five-15.vercel.app
+- **Frontend:** https://ragipgunay-icebergdigital-task.vercel.app
 - **Swagger:** https://iceberg-api-8s7s.onrender.com/api/docs
 
 ## Architecture

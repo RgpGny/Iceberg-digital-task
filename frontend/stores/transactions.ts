@@ -22,7 +22,7 @@ export const useTransactionsStore = defineStore('transactions', {
         const result = await api.get<Transaction[]>('/transactions', query);
         this.list = Array.isArray(result) ? result : [];
       } catch (err) {
-        this.error = err instanceof Error ? err.message : 'İşlemler yüklenemedi';
+        this.error = err instanceof Error ? err.message : 'Failed to load transactions';
       } finally {
         this.loading = false;
       }
@@ -35,7 +35,7 @@ export const useTransactionsStore = defineStore('transactions', {
       try {
         this.current = await api.get<Transaction>(`/transactions/${id}`);
       } catch (err) {
-        this.error = err instanceof Error ? err.message : 'İşlem yüklenemedi';
+        this.error = err instanceof Error ? err.message : 'Failed to load transaction';
       } finally {
         this.loading = false;
       }
@@ -50,7 +50,7 @@ export const useTransactionsStore = defineStore('transactions', {
         this.list.unshift(transaction);
         return transaction;
       } catch (err) {
-        this.error = err instanceof Error ? err.message : 'İşlem oluşturulamadı';
+        this.error = err instanceof Error ? err.message : 'Failed to create transaction';
         throw err;
       } finally {
         this.loading = false;
@@ -71,7 +71,7 @@ export const useTransactionsStore = defineStore('transactions', {
         }
         return this.current;
       } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Aşama ilerletilemedi';
+        this.error = err instanceof Error ? err.message : 'Failed to advance stage';
         throw err;
       } finally {
         this.loading = false;
