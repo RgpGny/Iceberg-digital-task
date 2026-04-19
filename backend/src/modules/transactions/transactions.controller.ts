@@ -1,8 +1,9 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Query } from '@nestjs/common';
 import { ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { TransactionsService } from './transactions.service';
 import { CreateTransactionDto } from './dto/create-transaction.dto';
 import { TransactionResponseDto } from './dto/transaction-response.dto';
+import { TransitionDto } from './dto/transition.dto';
 import { STAGES } from './state-machine';
 
 @ApiTags('transactions')
@@ -30,5 +31,14 @@ export class TransactionsController {
   @ApiResponse({ status: 200, type: TransactionResponseDto })
   findById(@Param('id') id: string): Promise<TransactionResponseDto> {
     return this.service.findById(id);
+  }
+
+  @Post(':id/transition')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Transition a transaction to the next stage' })
+  @ApiResponse({ status: 200, type: TransactionResponseDto })
+  @ApiResponse({ status: 400, description: 'Invalid stage transition' })
+  transition(@Param('id') id: string, @Body() dto: TransitionDto): Promise<TransactionResponseDto> {
+    return this.service.transition(id, dto);
   }
 }

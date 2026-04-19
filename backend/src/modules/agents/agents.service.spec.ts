@@ -39,7 +39,9 @@ describe('AgentsService', () => {
   });
 
   it('returns NotFoundException for a non-existent id', async () => {
-    await expect(service.findById('000000000000000000000000')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(service.findById('000000000000000000000000')).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 
   it('returns NotFoundException for a malformed id', async () => {

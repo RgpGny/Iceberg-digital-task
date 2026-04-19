@@ -1,7 +1,10 @@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types, isValidObjectId } from 'mongoose';
-import { CommissionBreakdown, CommissionBreakdownDocument } from './schemas/commission-breakdown.schema';
+import {
+  CommissionBreakdown,
+  CommissionBreakdownDocument,
+} from './schemas/commission-breakdown.schema';
 import { BreakdownResponseDto } from './dto/breakdown-response.dto';
 import { compute, CommissionResult } from './engine';
 import { Money } from '../../common/money';
@@ -55,7 +58,9 @@ export class CommissionsService {
     if (!isValidObjectId(transactionId)) {
       throw new NotFoundException(`Breakdown for transaction ${transactionId} not found`);
     }
-    const doc = await this.model.findOne({ transactionId: new Types.ObjectId(transactionId) }).exec();
+    const doc = await this.model
+      .findOne({ transactionId: new Types.ObjectId(transactionId) })
+      .exec();
     if (!doc) {
       throw new NotFoundException(`Breakdown for transaction ${transactionId} not found`);
     }
@@ -69,13 +74,21 @@ export class CommissionsService {
       transactionId: String(plain.transactionId),
       totalFee: plain.totalFee,
       agencyShare: plain.agencyShare,
-      agentShares: plain.agentShares.map((s: { agentId: Types.ObjectId; role: string; amount: { amount: number; currency: 'TRY' }; percentage: number; rationale: string }) => ({
-        agentId: String(s.agentId),
-        role: s.role as 'listing' | 'selling' | 'dual',
-        amount: s.amount,
-        percentage: s.percentage,
-        rationale: s.rationale,
-      })),
+      agentShares: plain.agentShares.map(
+        (s: {
+          agentId: Types.ObjectId;
+          role: string;
+          amount: { amount: number; currency: 'TRY' };
+          percentage: number;
+          rationale: string;
+        }) => ({
+          agentId: String(s.agentId),
+          role: s.role as 'listing' | 'selling' | 'dual',
+          amount: s.amount,
+          percentage: s.percentage,
+          rationale: s.rationale,
+        }),
+      ),
       scenario: plain.scenario,
       computedAt: (plain as unknown as { computedAt: Date }).computedAt.toISOString(),
     };

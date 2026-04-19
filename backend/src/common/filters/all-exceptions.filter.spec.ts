@@ -21,7 +21,10 @@ describe('AllExceptionsFilter', () => {
     const filter = new AllExceptionsFilter();
     const { host, response } = makeHost();
 
-    filter.catch(new BusinessError('invalid_transition', 'Cannot skip stages', { from: 'a', to: 'b' }), host);
+    filter.catch(
+      new BusinessError('invalid_transition', 'Cannot skip stages', { from: 'a', to: 'b' }),
+      host,
+    );
 
     expect(response.status).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
     expect(response.json).toHaveBeenCalledWith(

@@ -22,10 +22,10 @@ export function isTerminal(stage: Stage): boolean {
 
 export function assertValidTransition(from: Stage, to: Stage): void {
   if (!canTransition(from, to)) {
-    throw new BusinessError(
-      'invalid_transition',
-      `Illegal stage transition: ${from} → ${to}`,
-      { from, to, allowed: nextStage(from) },
-    );
+    throw new BusinessError('invalid_transition', `Illegal stage transition: ${from} → ${to}`, {
+      from,
+      to,
+      allowed: nextStage(from),
+    });
   }
 }

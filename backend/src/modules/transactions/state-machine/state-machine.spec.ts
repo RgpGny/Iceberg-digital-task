@@ -1,4 +1,11 @@
-import { STAGES, Stage, canTransition, nextStage, isTerminal, assertValidTransition } from './state-machine';
+import {
+  STAGES,
+  Stage,
+  canTransition,
+  nextStage,
+  isTerminal,
+  assertValidTransition,
+} from './state-machine';
 import { BusinessError } from '../../../common/errors';
 
 describe('Stage state machine', () => {

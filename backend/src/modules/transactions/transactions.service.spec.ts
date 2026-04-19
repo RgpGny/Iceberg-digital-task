@@ -5,6 +5,11 @@ import { NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { TransactionsService } from './transactions.service';
 import { Transaction, TransactionSchema } from './schemas/transaction.schema';
+import { CommissionsService } from '../commissions/commissions.service';
+import {
+  CommissionBreakdown,
+  CommissionBreakdownSchema,
+} from '../commissions/schemas/commission-breakdown.schema';
 
 describe('TransactionsService', () => {
   let mongo: MongoMemoryServer;
@@ -17,9 +22,12 @@ describe('TransactionsService', () => {
     const module = await Test.createTestingModule({
       imports: [
         MongooseModule.forRoot(mongo.getUri()),
-        MongooseModule.forFeature([{ name: Transaction.name, schema: TransactionSchema }]),
+        MongooseModule.forFeature([
+          { name: Transaction.name, schema: TransactionSchema },
+          { name: CommissionBreakdown.name, schema: CommissionBreakdownSchema },
+        ]),
       ],
-      providers: [TransactionsService],
+      providers: [TransactionsService, CommissionsService],
     }).compile();
     service = module.get(TransactionsService);
   });
@@ -30,7 +38,11 @@ describe('TransactionsService', () => {
 
   it('creates a transaction at the agreement stage with a history entry', async () => {
     const tx = await service.create({
-      property: { address: 'Kadıköy', type: 'sale', listPrice: { amount: 10_000_000, currency: 'TRY' } },
+      property: {
+        address: 'Kadıköy',
+        type: 'sale',
+        listPrice: { amount: 10_000_000, currency: 'TRY' },
+      },
       serviceFee: { amount: 1_000_000, currency: 'TRY' },
       listingAgentId: listingId,
       sellingAgentId: sellingId,

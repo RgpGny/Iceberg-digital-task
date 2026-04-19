@@ -4,7 +4,10 @@ import { MongoMemoryServer } from 'mongodb-memory-server';
 import { ConflictException, NotFoundException } from '@nestjs/common';
 import { Types } from 'mongoose';
 import { CommissionsService } from './commissions.service';
-import { CommissionBreakdown, CommissionBreakdownSchema } from './schemas/commission-breakdown.schema';
+import {
+  CommissionBreakdown,
+  CommissionBreakdownSchema,
+} from './schemas/commission-breakdown.schema';
 import { Money } from '../../common/money';
 
 describe('CommissionsService', () => {
@@ -69,6 +72,8 @@ describe('CommissionsService', () => {
   });
 
   it('returns NotFoundException for a malformed transactionId', async () => {
-    await expect(service.findByTransactionId('not-an-id')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(service.findByTransactionId('not-an-id')).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 });

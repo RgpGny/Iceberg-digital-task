@@ -33,7 +33,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (payload.statusCode >= 500) {
       this.logger.error(`${payload.method} ${payload.path} → ${payload.statusCode}`, exception);
     } else {
-      this.logger.warn(`${payload.method} ${payload.path} → ${payload.statusCode} (${payload.code})`);
+      this.logger.warn(
+        `${payload.method} ${payload.path} → ${payload.statusCode} (${payload.code})`,
+      );
     }
 
     response.status(payload.statusCode).json(payload);
@@ -59,9 +61,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
     if (exception instanceof HttpException) {
       const status = exception.getStatus();
       const body = exception.getResponse();
-      const message = typeof body === 'string' ? body : (body as { message?: string }).message ?? exception.message;
+      const message =
+        typeof body === 'string'
+          ? body
+          : ((body as { message?: string }).message ?? exception.message);
       const code = this.codeFromStatus(status);
-      const details = typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : undefined;
+      const details =
+        typeof body === 'object' && body !== null ? (body as Record<string, unknown>) : undefined;
       return { ...base, statusCode: status, code, message, details };
     }
 

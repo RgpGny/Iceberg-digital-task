@@ -23,7 +23,10 @@ export class AgentShareEmbedded {
 }
 export const AgentShareEmbeddedSchema = SchemaFactory.createForClass(AgentShareEmbedded);
 
-@Schema({ collection: 'commission_breakdowns', timestamps: { createdAt: 'computedAt', updatedAt: false } })
+@Schema({
+  collection: 'commission_breakdowns',
+  timestamps: { createdAt: 'computedAt', updatedAt: false },
+})
 export class CommissionBreakdown {
   @Prop({ required: true, type: Types.ObjectId, ref: 'Transaction', unique: true })
   transactionId!: Types.ObjectId;

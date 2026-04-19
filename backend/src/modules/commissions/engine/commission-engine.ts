@@ -44,8 +44,7 @@ export function compute(input: CommissionInput): CommissionResult {
           role: 'dual',
           amount: agentPortion,
           percentage: 50,
-          rationale:
-            'Listing and selling agent are the same person — full agent portion (50%).',
+          rationale: 'Listing and selling agent are the same person — full agent portion (50%).',
         },
       ],
     };

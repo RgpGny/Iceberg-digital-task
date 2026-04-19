@@ -80,8 +80,7 @@ describe('commission engine', () => {
       const result = compute(input);
 
       const sum =
-        result.agencyShare.amount +
-        result.agentShares.reduce((acc, s) => acc + s.amount.amount, 0);
+        result.agencyShare.amount + result.agentShares.reduce((acc, s) => acc + s.amount.amount, 0);
       expect(sum).toBe(1_000_001);
     });
 
@@ -93,7 +92,9 @@ describe('commission engine', () => {
       };
       const result = compute(input);
 
-      expect(result.agencyShare.amount + result.agentShares.reduce((a, s) => a + s.amount.amount, 0)).toBe(1_000_003);
+      expect(
+        result.agencyShare.amount + result.agentShares.reduce((a, s) => a + s.amount.amount, 0),
+      ).toBe(1_000_003);
     });
 
     it('same-agent odd total also sums back to total', () => {
@@ -103,7 +104,8 @@ describe('commission engine', () => {
         sellingAgentId: listing,
       };
       const result = compute(input);
-      const sum = result.agencyShare.amount + result.agentShares.reduce((a, s) => a + s.amount.amount, 0);
+      const sum =
+        result.agencyShare.amount + result.agentShares.reduce((a, s) => a + s.amount.amount, 0);
       expect(sum).toBe(1_000_001);
     });
   });

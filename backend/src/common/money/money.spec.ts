@@ -1,4 +1,12 @@
-import { Money, addMoney, multiplyMoney, scaleMoney, subtractMoney, zeroMoney, splitMoneyEvenly } from './money';
+import {
+  Money,
+  addMoney,
+  multiplyMoney,
+  scaleMoney,
+  subtractMoney,
+  zeroMoney,
+  splitMoneyEvenly,
+} from './money';
 
 describe('Money', () => {
   describe('construction via Money.of', () => {
@@ -44,9 +52,9 @@ describe('Money', () => {
     });
 
     it('throws on currency mismatch', () => {
-      expect(() => addMoney(Money.of(1, 'TRY'), { amount: 1, currency: 'USD' } as unknown as Money)).toThrow(
-        'Currency mismatch',
-      );
+      expect(() =>
+        addMoney(Money.of(1, 'TRY'), { amount: 1, currency: 'USD' } as unknown as Money),
+      ).toThrow('Currency mismatch');
     });
   });
 
