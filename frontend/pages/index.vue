@@ -6,13 +6,6 @@ import { useTransactionsStore } from '~/stores/transactions';
 const transactionsStore = useTransactionsStore();
 const activeFilter = ref<Stage | ''>('');
 
-const stageBadgeColor: Record<Stage, string> = {
-  agreement: 'neutral',
-  earnest_money: 'warning',
-  title_deed: 'primary',
-  completed: 'success',
-};
-
 const stageFilters = [
   { label: 'Tümü', value: '' as Stage | '' },
   ...STAGE_ORDER.map((s) => ({ label: STAGE_LABELS[s], value: s as Stage | '' })),
@@ -25,98 +18,138 @@ async function applyFilter(val: Stage | '') {
 
 onMounted(() => transactionsStore.fetchAll());
 
-const stats = computed(() => {
-  const list = transactionsStore.list;
-  return STAGE_ORDER.map((s) => ({
+const stats = computed(() =>
+  STAGE_ORDER.map((s) => ({
     stage: s,
     label: STAGE_LABELS[s],
-    count: list.filter((t) => t.stage === s).length,
-  }));
-});
+    count: transactionsStore.list.filter((t) => t.stage === s).length,
+  })),
+);
+
+const stageClass: Record<Stage, string> = {
+  agreement: 'pill-agreement',
+  earnest_money: 'pill-earnest',
+  title_deed: 'pill-title_deed',
+  completed: 'pill-completed',
+};
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto px-4 py-8 space-y-8">
-    <!-- Header -->
-    <div class="flex items-center justify-between">
-      <h1 class="text-2xl font-bold text-gray-900">Gayrimenkul İşlemleri</h1>
-      <UButton color="primary" @click="navigateTo('/transactions/new')"> + Yeni İşlem </UButton>
+  <div class="max-w-7xl mx-auto px-6 py-10 space-y-8">
+    <!-- Page header -->
+    <div class="flex items-end justify-between">
+      <div>
+        <p class="page-eyebrow">Gayrimenkul Platformu</p>
+        <h1 class="page-title">
+          Gayrimenkul
+          <span :style="{ color: 'var(--color-accent-light)' }">İşlemleri</span>
+        </h1>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--color-text-3)">
+        {{
+          new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+        }}
+      </p>
     </div>
 
-    <!-- Stats -->
-    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-      <UCard v-for="s in stats" :key="s.stage" class="text-center">
-        <p class="text-3xl font-bold text-gray-900">{{ s.count }}</p>
-        <p class="text-sm text-gray-500 mt-1">{{ s.label }}</p>
-      </UCard>
+    <!-- Stats row -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div
+        v-for="s in stats"
+        :key="s.stage"
+        class="stat-card cursor-pointer"
+        @click="applyFilter(s.stage as Stage)"
+      >
+        <div class="stat-number">{{ s.count }}</div>
+        <div class="stat-label">{{ s.label }}</div>
+        <div
+          class="mt-3 h-px"
+          :style="`background:var(--stage-${s.stage === 'earnest_money' ? 'earnest' : s.stage === 'title_deed' ? 'title' : s.stage === 'completed' ? 'done' : 'agreement'});opacity:0.3`"
+        />
+      </div>
     </div>
 
-    <!-- Stage filter -->
-    <div class="flex flex-wrap gap-2">
-      <UButton
+    <!-- Filter row -->
+    <div class="flex items-center gap-2 flex-wrap">
+      <button
         v-for="f in stageFilters"
         :key="f.value"
-        size="sm"
-        :color="activeFilter === f.value ? 'primary' : 'neutral'"
-        :variant="activeFilter === f.value ? 'solid' : 'outline'"
+        class="filter-pill"
+        :class="{ active: activeFilter === f.value }"
         @click="applyFilter(f.value)"
       >
         {{ f.label }}
-      </UButton>
+      </button>
     </div>
 
     <!-- Error -->
-    <UAlert v-if="transactionsStore.error" color="error" :description="transactionsStore.error" />
-
-    <!-- Loading -->
-    <div v-if="transactionsStore.loading" class="text-center py-12 text-gray-400">
-      Yükleniyor...
+    <div v-if="transactionsStore.error" class="error-banner">
+      {{ transactionsStore.error }}
     </div>
 
-    <!-- Transaction table -->
-    <div v-else class="overflow-x-auto rounded-lg border border-gray-200 bg-white">
-      <table class="w-full text-sm">
-        <thead class="bg-gray-50 text-left">
+    <!-- Table -->
+    <div class="card overflow-hidden">
+      <!-- Loading -->
+      <div v-if="transactionsStore.loading" class="card-body text-center py-16">
+        <p class="f-display-italic" style="font-size: 1.1rem; color: var(--color-text-2)">
+          Yükleniyor…
+        </p>
+      </div>
+
+      <table v-else class="table">
+        <thead>
           <tr>
-            <th class="px-4 py-3 font-medium text-gray-600">Mülk</th>
-            <th class="px-4 py-3 font-medium text-gray-600">Tür</th>
-            <th class="px-4 py-3 font-medium text-gray-600">Hizmet Bedeli</th>
-            <th class="px-4 py-3 font-medium text-gray-600">Aşama</th>
-            <th class="px-4 py-3 font-medium text-gray-600">Tarih</th>
-            <th class="px-4 py-3 font-medium text-gray-600"/>
+            <th>Mülk</th>
+            <th>Tür</th>
+            <th>Hizmet Bedeli</th>
+            <th>Aşama</th>
+            <th>Tarih</th>
+            <th style="width: 80px" />
           </tr>
         </thead>
-        <tbody class="divide-y divide-gray-100">
+        <tbody>
+          <!-- Empty state -->
           <tr v-if="transactionsStore.list.length === 0">
-            <td colspan="6" class="px-4 py-12 text-center text-gray-400">İşlem bulunamadı.</td>
+            <td colspan="6" class="text-center py-16">
+              <p class="f-display-italic" style="font-size: 1.1rem; color: var(--color-text-3)">
+                Kayıt bulunamadı
+              </p>
+              <p style="font-size: 0.8rem; color: var(--color-text-3); margin-top: 6px">
+                İlk işlemi oluşturmak için sol menüden "Yeni İşlem" butonuna tıklayın
+              </p>
+            </td>
           </tr>
+
           <tr
             v-for="tx in transactionsStore.list"
             :key="tx.id"
-            class="hover:bg-gray-50 transition-colors"
+            @click="navigateTo(`/transactions/${tx.id}`)"
           >
-            <td class="px-4 py-3 font-medium text-gray-900">{{ tx.property.address }}</td>
-            <td class="px-4 py-3 text-gray-600">
+            <td data-label="Mülk">
+              <span style="font-weight: 500">{{ tx.property.address }}</span>
+            </td>
+            <td data-label="Tür" style="color: var(--color-text-2)">
               {{ tx.property.type === 'sale' ? 'Satış' : 'Kiralık' }}
             </td>
-            <td class="px-4 py-3 text-gray-900">{{ formatMoney(tx.serviceFee) }}</td>
-            <td class="px-4 py-3">
-              <UBadge :color="stageBadgeColor[tx.stage]" variant="soft">
-                {{ STAGE_LABELS[tx.stage] }}
-              </UBadge>
+            <td data-label="Hizmet Bedeli">
+              <span class="money-sm">{{ formatMoney(tx.serviceFee) }}</span>
             </td>
-            <td class="px-4 py-3 text-gray-500">
+            <td data-label="Aşama">
+              <span class="pill" :class="stageClass[tx.stage]">
+                <span class="pill-dot" />
+                {{ STAGE_LABELS[tx.stage] }}
+              </span>
+            </td>
+            <td data-label="Tarih" style="color: var(--color-text-3); font-size: 0.8rem">
               {{ new Date(tx.createdAt).toLocaleDateString('tr-TR') }}
             </td>
-            <td class="px-4 py-3">
-              <UButton
-                size="xs"
-                color="neutral"
-                variant="outline"
-                @click="navigateTo(`/transactions/${tx.id}`)"
+            <td data-label="">
+              <button
+                class="btn btn-ghost btn-sm"
+                @click.stop="navigateTo(`/transactions/${tx.id}`)"
               >
                 Görüntüle
-              </UButton>
+              </button>
             </td>
           </tr>
         </tbody>

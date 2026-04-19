@@ -29,121 +29,207 @@ const breakdown = computed(() => transactionsStore.breakdown);
 function agentName(agentId: string): string {
   return agentsStore.agents.find((a) => a.id === agentId)?.name ?? agentId;
 }
+
+const stagePillClass: Record<string, string> = {
+  agreement: 'pill-agreement',
+  earnest_money: 'pill-earnest',
+  title_deed: 'pill-title_deed',
+  completed: 'pill-completed',
+};
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto px-4 py-8 space-y-6">
-    <!-- Back -->
-    <div class="flex items-center gap-3">
-      <UButton
-        color="neutral"
-        variant="ghost"
-        icon="i-heroicons-arrow-left"
-        @click="navigateTo('/')"
-      >
-        Geri
-      </UButton>
-      <h1 class="text-2xl font-bold text-gray-900">İşlem Detayı</h1>
+  <div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center gap-4">
+      <button class="btn btn-ghost btn-sm" @click="navigateTo('/')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M9 11L5 7l4-4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+        Tüm İşlemler
+      </button>
+      <div>
+        <p class="page-eyebrow" style="margin-bottom: 4px">İşlem Detayı</p>
+        <h1 v-if="tx" class="f-display-italic" style="font-size: 1.75rem; margin: 0">
+          {{ tx.property.address }}
+        </h1>
+      </div>
     </div>
 
     <!-- Loading -->
-    <div v-if="transactionsStore.loading && !tx" class="text-center py-16 text-gray-400">
-      Yükleniyor...
+    <div v-if="transactionsStore.loading && !tx" class="text-center py-20">
+      <p class="f-display-italic" style="font-size: 1.1rem; color: var(--color-text-3)">
+        Yükleniyor…
+      </p>
     </div>
 
     <!-- Error -->
-    <UAlert
-      v-else-if="transactionsStore.error"
-      color="error"
-      :description="transactionsStore.error"
-    />
+    <div v-else-if="transactionsStore.error" class="error-banner">
+      {{ transactionsStore.error }}
+    </div>
 
     <template v-else-if="tx">
-      <!-- Property card -->
-      <UCard>
-        <template #header>
-          <h2 class="text-base font-semibold">Mülk Bilgileri</h2>
-        </template>
-        <dl class="grid grid-cols-2 gap-4 text-sm">
-          <div>
-            <dt class="text-gray-500">Adres</dt>
-            <dd class="font-medium text-gray-900 mt-0.5">{{ tx.property.address }}</dd>
+      <!-- Top row: Property + Stage -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- Property info -->
+        <div class="card">
+          <div class="card-head">
+            <span class="label">Mülk Bilgileri</span>
+            <span class="pill" :class="stagePillClass[tx.stage]">
+              <span class="pill-dot" />
+              {{ STAGE_LABELS[tx.stage] }}
+            </span>
           </div>
-          <div>
-            <dt class="text-gray-500">Tür</dt>
-            <dd class="font-medium text-gray-900 mt-0.5">
-              {{ tx.property.type === 'sale' ? 'Satış' : 'Kiralık' }}
-            </dd>
+          <div class="card-body space-y-4">
+            <div>
+              <p class="detail-key">Adres</p>
+              <p class="detail-val" style="font-weight: 500">{{ tx.property.address }}</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <p class="detail-key">Tür</p>
+                <p class="detail-val">{{ tx.property.type === 'sale' ? 'Satış' : 'Kiralık' }}</p>
+              </div>
+              <div v-if="tx.completedAt">
+                <p class="detail-key">Tamamlandı</p>
+                <p class="detail-val">
+                  {{ new Date(tx.completedAt).toLocaleDateString('tr-TR') }}
+                </p>
+              </div>
+            </div>
+            <div
+              style="
+                background: var(--color-surface-2);
+                border-radius: var(--radius-md);
+                padding: 12px 14px;
+              "
+            >
+              <p class="detail-key" style="margin-bottom: 2px">Liste Fiyatı</p>
+              <p class="money-lg" style="font-size: 1.4rem">
+                {{ formatMoney(tx.property.listPrice) }}
+              </p>
+            </div>
+            <div
+              style="
+                background: var(--accent-glow-2);
+                border: 1px solid var(--accent-border);
+                border-radius: var(--radius-md);
+                padding: 12px 14px;
+              "
+            >
+              <p class="detail-key" style="margin-bottom: 2px; color: var(--color-accent-dim)">
+                Hizmet Bedeli
+              </p>
+              <p class="money-xl" style="font-size: 1.4rem">{{ formatMoney(tx.serviceFee) }}</p>
+            </div>
           </div>
-          <div>
-            <dt class="text-gray-500">Liste Fiyatı</dt>
-            <dd class="font-medium text-gray-900 mt-0.5">
-              {{ formatMoney(tx.property.listPrice) }}
-            </dd>
+        </div>
+
+        <!-- Agents + Stage -->
+        <div class="space-y-5">
+          <!-- Agents -->
+          <div class="card">
+            <div class="card-head">
+              <span class="label">Ajanlar</span>
+            </div>
+            <div class="card-body space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="detail-key">Satışa Çıkaran</p>
+                  <p class="detail-val" style="font-weight: 500">
+                    {{ agentName(tx.listingAgentId) }}
+                  </p>
+                </div>
+                <div class="avatar">{{ agentName(tx.listingAgentId).charAt(0) }}</div>
+              </div>
+              <div style="border-top: 1px solid var(--color-border)" />
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="detail-key">Satan</p>
+                  <p class="detail-val" style="font-weight: 500">
+                    {{ agentName(tx.sellingAgentId) }}
+                  </p>
+                </div>
+                <div class="avatar">{{ agentName(tx.sellingAgentId).charAt(0) }}</div>
+              </div>
+            </div>
           </div>
-          <div>
-            <dt class="text-gray-500">Hizmet Bedeli</dt>
-            <dd class="font-medium text-gray-900 mt-0.5">{{ formatMoney(tx.serviceFee) }}</dd>
+
+          <!-- Transition button -->
+          <div v-if="tx.stage !== 'completed'" class="card card-body">
+            <TransitionButton
+              :transaction-id="tx.id"
+              :current-stage="tx.stage"
+              @transitioned="onTransitioned"
+            />
           </div>
-          <div>
-            <dt class="text-gray-500">Satışa Çıkaran Ajan</dt>
-            <dd class="font-medium text-gray-900 mt-0.5">{{ agentName(tx.listingAgentId) }}</dd>
-          </div>
-          <div>
-            <dt class="text-gray-500">Satan Ajan</dt>
-            <dd class="font-medium text-gray-900 mt-0.5">{{ agentName(tx.sellingAgentId) }}</dd>
-          </div>
-          <div v-if="tx.completedAt">
-            <dt class="text-gray-500">Tamamlanma Tarihi</dt>
-            <dd class="font-medium text-gray-900 mt-0.5">
-              {{ new Date(tx.completedAt).toLocaleDateString('tr-TR') }}
-            </dd>
-          </div>
-        </dl>
-      </UCard>
+        </div>
+      </div>
 
       <!-- Stage timeline -->
-      <UCard>
-        <template #header>
-          <h2 class="text-base font-semibold">Aşama Durumu</h2>
-        </template>
-        <StageTimeline :stage="tx.stage" :stage-history="tx.stageHistory" />
-
-        <div class="mt-6">
-          <TransitionButton
-            :transaction-id="tx.id"
-            :current-stage="tx.stage"
-            @transitioned="onTransitioned"
-          />
+      <div class="card">
+        <div class="card-head">
+          <span class="label">Aşama Durumu</span>
         </div>
-      </UCard>
+        <div class="card-body">
+          <StageTimeline :stage="tx.stage" :stage-history="tx.stageHistory" />
+        </div>
+      </div>
 
-      <!-- Stage history log -->
-      <UCard v-if="tx.stageHistory.length > 0">
-        <template #header>
-          <h2 class="text-base font-semibold">Aşama Geçmiş Kaydı</h2>
-        </template>
-        <div class="space-y-2 text-sm">
-          <div
-            v-for="(entry, i) in [...tx.stageHistory].reverse()"
-            :key="i"
-            class="flex items-start gap-3 border-b border-gray-100 pb-2 last:border-0"
-          >
-            <span class="text-gray-400 shrink-0 mt-0.5">
-              {{ new Date(entry.at).toLocaleString('tr-TR') }}
+      <!-- History log -->
+      <div v-if="tx.stageHistory.length > 0" class="card">
+        <div class="card-head">
+          <span class="label">Geçmiş Kayıtları</span>
+        </div>
+        <div class="card-body space-y-0">
+          <div v-for="(entry, i) in [...tx.stageHistory].reverse()" :key="i" class="log-entry">
+            <div class="log-dot" />
+            <div class="flex-1">
+              <p style="font-size: 0.875rem">
+                <template v-if="entry.from">
+                  <span style="color: var(--color-text-2)">{{ STAGE_LABELS[entry.from] }}</span>
+                  <span style="color: var(--color-text-3); margin: 0 6px">→</span>
+                  <span style="font-weight: 500">{{ STAGE_LABELS[entry.to] }}</span>
+                </template>
+                <template v-else>
+                  <span style="color: var(--color-text-2)">Başlangıç:</span>
+                  <span style="font-weight: 500; margin-left: 4px">{{
+                    STAGE_LABELS[entry.to]
+                  }}</span>
+                </template>
+              </p>
+              <p
+                v-if="entry.note"
+                class="f-display-italic"
+                style="font-size: 0.8rem; color: var(--color-accent-dim); margin-top: 2px"
+              >
+                "{{ entry.note }}"
+              </p>
+            </div>
+            <span
+              class="f-mono"
+              style="font-size: 0.72rem; color: var(--color-text-3); white-space: nowrap"
+            >
+              {{
+                new Date(entry.at).toLocaleString('tr-TR', {
+                  day: '2-digit',
+                  month: '2-digit',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })
+              }}
             </span>
-            <span class="text-gray-700">
-              <template v-if="entry.from">
-                {{ STAGE_LABELS[entry.from] }} → {{ STAGE_LABELS[entry.to] }}
-              </template>
-              <template v-else> Başlangıç: {{ STAGE_LABELS[entry.to] }} </template>
-            </span>
-            <span v-if="entry.note" class="text-gray-400 italic">« {{ entry.note }} »</span>
           </div>
         </div>
-      </UCard>
+      </div>
 
-      <!-- Commission breakdown (only when completed) -->
+      <!-- Commission breakdown -->
       <CommissionBreakdownCard
         v-if="breakdown"
         :breakdown="breakdown"

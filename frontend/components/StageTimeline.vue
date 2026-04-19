@@ -12,7 +12,7 @@ const currentIndex = computed(() => STAGE_ORDER.indexOf(props.stage));
 function getStageDate(s: Stage): string | null {
   const entry = props.stageHistory.find((h) => h.to === s);
   if (!entry) return null;
-  return new Date(entry.at).toLocaleDateString('tr-TR');
+  return new Date(entry.at).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' });
 }
 
 function stageStatus(s: Stage): 'completed' | 'current' | 'upcoming' {
@@ -24,60 +24,64 @@ function stageStatus(s: Stage): 'completed' | 'current' | 'upcoming' {
 </script>
 
 <template>
-  <div class="flex items-start w-full overflow-x-auto py-2">
+  <div class="flex items-start w-full overflow-x-auto py-1">
     <template v-for="(s, idx) in STAGE_ORDER" :key="s">
-      <div class="flex flex-col items-center min-w-[80px]">
-        <!-- Circle -->
-        <div
-          class="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all"
-          :class="{
-            'bg-green-500 border-green-500 text-white': stageStatus(s) === 'completed',
-            'bg-blue-600 border-blue-600 text-white ring-4 ring-blue-100':
-              stageStatus(s) === 'current',
-            'bg-white border-gray-300 text-gray-400': stageStatus(s) === 'upcoming',
-          }"
-        >
+      <div class="flex flex-col items-center" style="min-width: 80px">
+        <!-- Dot -->
+        <div class="timeline-dot" :class="stageStatus(s)">
           <template v-if="stageStatus(s) === 'completed'">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
               <path
+                d="M2.5 6.5l2.5 2.5 5-5"
+                stroke="currentColor"
+                stroke-width="1.8"
                 stroke-linecap="round"
                 stroke-linejoin="round"
-                stroke-width="3"
-                d="M5 13l4 4L19 7"
               />
             </svg>
           </template>
           <template v-else>
-            {{ idx + 1 }}
+            <span style="font-size: 11px; font-weight: 600">{{ idx + 1 }}</span>
           </template>
         </div>
 
         <!-- Label -->
         <span
-          class="mt-2 text-xs text-center font-medium"
-          :class="{
-            'text-green-600': stageStatus(s) === 'completed',
-            'text-blue-700': stageStatus(s) === 'current',
-            'text-gray-400': stageStatus(s) === 'upcoming',
+          style="
+            margin-top: 8px;
+            font-size: 10px;
+            text-align: center;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+          "
+          :style="{
+            color:
+              stageStatus(s) === 'completed'
+                ? 'var(--color-stage-completed)'
+                : stageStatus(s) === 'current'
+                  ? 'var(--color-accent-light)'
+                  : 'var(--color-text-3)',
           }"
         >
           {{ STAGE_LABELS[s] }}
         </span>
 
         <!-- Date -->
-        <span class="mt-1 text-xs text-gray-400 text-center">
+        <span
+          class="f-mono"
+          style="font-size: 10px; color: var(--color-text-3); margin-top: 3px; text-align: center"
+        >
           {{ getStageDate(s) ?? '' }}
         </span>
       </div>
 
-      <!-- Connector line (not after the last item) -->
+      <!-- Connector -->
       <div
         v-if="idx < STAGE_ORDER.length - 1"
-        class="flex-1 h-0.5 mt-4 mx-1 min-w-[24px] transition-all"
-        :class="{
-          'bg-green-400': STAGE_ORDER.indexOf(s) < currentIndex,
-          'bg-gray-200': STAGE_ORDER.indexOf(s) >= currentIndex,
-        }"
+        class="timeline-line"
+        :class="STAGE_ORDER.indexOf(s) < currentIndex ? 'done' : 'pending'"
+        style="min-width: 24px"
       />
     </template>
   </div>

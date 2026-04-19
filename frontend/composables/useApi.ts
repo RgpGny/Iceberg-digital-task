@@ -1,6 +1,6 @@
 export const useApi = () => {
   const config = useRuntimeConfig();
-  const baseURL = config.public.apiUrl as string;
+  const baseURL = (config.public.apiUrl as string).trim();
 
   async function get<T>(path: string, query?: Record<string, string>): Promise<T> {
     return $fetch<T>(path, {

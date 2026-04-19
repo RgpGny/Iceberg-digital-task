@@ -13,11 +13,6 @@ const form = reactive({
   sellingAgentId: '',
 });
 
-const propertyTypeItems = [
-  { label: 'Satış', value: 'sale' },
-  { label: 'Kiralık', value: 'rental' },
-];
-
 const submitting = ref(false);
 const validationError = ref('');
 
@@ -58,8 +53,6 @@ async function submit() {
       sellingAgentId: form.sellingAgentId,
     });
     await navigateTo(`/transactions/${tx.id}`);
-  } catch {
-    validationError.value = transactionsStore.error ?? 'İşlem oluşturulamadı.';
   } finally {
     submitting.value = false;
   }
@@ -67,72 +60,128 @@ async function submit() {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto px-4 py-8 space-y-6">
-    <div class="flex items-center gap-3">
-      <UButton
-        color="neutral"
-        variant="ghost"
-        icon="i-heroicons-arrow-left"
-        @click="navigateTo('/')"
-      >
+  <div class="max-w-2xl mx-auto">
+    <!-- Header -->
+    <div class="flex items-center gap-4 mb-10">
+      <button class="btn btn-ghost btn-sm" @click="navigateTo('/')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M9 11L5 7l4-4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
         Geri
-      </UButton>
-      <h1 class="text-2xl font-bold text-gray-900">Yeni İşlem Oluştur</h1>
+      </button>
+      <div>
+        <p class="page-eyebrow" style="margin-bottom: 4px">İşlem Yönetimi</p>
+        <h1 class="f-display-italic" style="font-size: 1.75rem; margin: 0">
+          Yeni İşlem
+          <span style="color: var(--color-accent-light)">Oluştur</span>
+        </h1>
+      </div>
     </div>
 
-    <UCard>
-      <div class="space-y-5">
-        <h2 class="text-base font-semibold text-gray-700">Mülk Bilgileri</h2>
-
-        <UFormField label="Adres">
-          <UInput v-model="form.address" placeholder="Örn. Kadıköy, İstanbul" class="w-full" />
-        </UFormField>
-
-        <UFormField label="Mülk Türü">
-          <USelect v-model="form.propertyType" :items="propertyTypeItems" class="w-full" />
-        </UFormField>
-
-        <UFormField label="Liste Fiyatı (₺)">
-          <UInput
-            v-model="form.listPriceTL"
-            type="number"
-            min="1"
-            placeholder="Örn. 2500000"
-            class="w-full"
+    <div class="card">
+      <!-- Mülk Bilgileri -->
+      <div class="card-head">
+        <span class="label">Mülk Bilgileri</span>
+      </div>
+      <div class="card-body space-y-5">
+        <div>
+          <label for="address" class="field-label">Adres</label>
+          <input
+            id="address"
+            v-model="form.address"
+            class="input"
+            placeholder="Örn: Kadıköy, İstanbul"
           />
-        </UFormField>
-
-        <h2 class="text-base font-semibold text-gray-700 pt-2">Hizmet Bedeli</h2>
-
-        <UFormField label="Hizmet Bedeli (₺)">
-          <UInput
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="propertyType" class="field-label">Mülk Türü</label>
+            <select id="propertyType" v-model="form.propertyType" class="select">
+              <option value="sale">Satış</option>
+              <option value="rental">Kiralık</option>
+            </select>
+          </div>
+          <div>
+            <label for="listPrice" class="field-label">Liste Fiyatı (₺)</label>
+            <input
+              id="listPrice"
+              v-model="form.listPriceTL"
+              type="number"
+              min="1"
+              class="input"
+              placeholder="0"
+            />
+          </div>
+        </div>
+        <div>
+          <label for="serviceFee" class="field-label">Hizmet Bedeli (₺)</label>
+          <input
+            id="serviceFee"
             v-model="form.serviceFeeTL"
             type="number"
             min="1"
-            placeholder="Örn. 75000"
-            class="w-full"
+            class="input"
+            placeholder="0"
           />
-        </UFormField>
-
-        <h2 class="text-base font-semibold text-gray-700 pt-2">Ajanlar</h2>
-
-        <AgentPicker v-model="form.listingAgentId" label="Satışa Çıkaran Ajan" />
-        <AgentPicker v-model="form.sellingAgentId" label="Satan Ajan" />
-
-        <UAlert v-if="validationError" color="error" :description="validationError" />
-
-        <div class="flex gap-3 pt-2">
-          <UButton color="primary" :loading="submitting" @click="submit"> İşlem Oluştur </UButton>
-          <UButton
-            color="neutral"
-            variant="outline"
-            :disabled="submitting"
-            @click="navigateTo('/')"
-          >
-            İptal
-          </UButton>
         </div>
       </div>
-    </UCard>
+
+      <div style="border-top: 1px solid var(--color-border)" />
+
+      <!-- Ajanlar -->
+      <div class="card-head">
+        <span class="label">Ajanlar</span>
+      </div>
+      <div class="card-body space-y-4">
+        <AgentPicker v-model="form.listingAgentId" label="Satışa Çıkaran Ajan" />
+        <AgentPicker v-model="form.sellingAgentId" label="Satan Ajan" />
+        <p
+          v-if="form.listingAgentId && form.listingAgentId === form.sellingAgentId"
+          class="f-display-italic"
+          style="font-size: 11.5px; color: var(--color-accent-dim)"
+        >
+          Çift rol senaryosu — aynı ajan iki rolü üstleniyor.
+        </p>
+      </div>
+
+      <!-- Validation error -->
+      <div v-if="validationError" class="error-banner mx-5 mb-4">
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          style="flex-shrink: 0; color: var(--color-danger)"
+        >
+          <path
+            d="M7 1L13 12H1L7 1z"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M7 5v3M7 10v.5"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+          />
+        </svg>
+        {{ validationError }}
+      </div>
+
+      <!-- Actions -->
+      <div class="card-foot flex items-center justify-between">
+        <button class="btn btn-ghost" @click="navigateTo('/')">İptal</button>
+        <button class="btn btn-primary btn-lg" :disabled="submitting" @click="submit">
+          {{ submitting ? 'Oluşturuluyor…' : 'İşlem Oluştur' }}
+        </button>
+      </div>
+    </div>
   </div>
 </template>

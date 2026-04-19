@@ -7,9 +7,7 @@ const props = defineProps<{
   currentStage: Stage;
 }>();
 
-const emit = defineEmits<{
-  transitioned: [];
-}>();
+const emit = defineEmits<{ transitioned: [] }>();
 
 const transactionsStore = useTransactionsStore();
 
@@ -42,24 +40,32 @@ function cancel() {
 </script>
 
 <template>
-  <div v-if="next" class="flex flex-col gap-2">
-    <div v-if="showNoteInput" class="flex flex-col gap-2">
-      <UFormField label="Not (isteğe bağlı)">
-        <UInput v-model="note" placeholder="Aşama geçişi için not ekleyin..." class="w-full" />
-      </UFormField>
-      <div class="flex gap-2">
-        <UButton color="primary" :loading="loading" @click="handleTransition">
-          {{ STAGE_LABELS[next] }} Aşamasına İlerlet
-        </UButton>
-        <UButton color="neutral" variant="outline" :disabled="loading" @click="cancel">
-          İptal
-        </UButton>
+  <div v-if="next" class="space-y-3">
+    <div v-if="showNoteInput" class="space-y-3">
+      <div>
+        <label class="field-label">Not (isteğe bağlı)</label>
+        <input v-model="note" class="input" placeholder="Aşama geçişi için not ekleyin…" />
+      </div>
+      <div class="flex items-center gap-2">
+        <button class="btn btn-primary" :disabled="loading" @click="handleTransition">
+          {{ loading ? 'İşleniyor…' : `${STAGE_LABELS[next]} Aşamasına İlerlet` }}
+        </button>
+        <button class="btn btn-ghost" :disabled="loading" @click="cancel">İptal</button>
       </div>
     </div>
     <div v-else>
-      <UButton color="primary" :loading="loading" @click="handleTransition">
+      <button class="btn btn-primary" @click="handleTransition">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path
+            d="M2 7h10M8 3l4 4-4 4"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
         {{ STAGE_LABELS[next] }} Aşamasına İlerlet
-      </UButton>
+      </button>
     </div>
   </div>
 </template>

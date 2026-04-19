@@ -4,10 +4,10 @@ test.describe('New Transaction Form', () => {
   test('renders form fields', async ({ page }) => {
     await page.goto('/transactions/new');
     await expect(page.getByText('Yeni İşlem Oluştur')).toBeVisible();
-    await expect(page.getByLabel('Adres')).toBeVisible();
-    await expect(page.getByLabel('Mülk Türü')).toBeVisible();
-    await expect(page.getByLabel('Liste Fiyatı (₺)')).toBeVisible();
-    await expect(page.getByLabel('Hizmet Bedeli (₺)')).toBeVisible();
+    await expect(page.locator('#address')).toBeVisible();
+    await expect(page.locator('#propertyType')).toBeVisible();
+    await expect(page.locator('#listPrice')).toBeVisible();
+    await expect(page.locator('#serviceFee')).toBeVisible();
   });
 
   test('shows validation error when submitting empty form', async ({ page }) => {

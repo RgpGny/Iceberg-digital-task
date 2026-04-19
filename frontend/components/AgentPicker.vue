@@ -6,30 +6,26 @@ const props = defineProps<{
   label: string;
 }>();
 
-const emit = defineEmits<{
-  'update:modelValue': [value: string];
-}>();
+const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
 
 const agentsStore = useAgentsStore();
 
 onMounted(async () => {
-  if (agentsStore.agents.length === 0) {
-    await agentsStore.fetchAll();
-  }
-});
-
-const items = computed(() =>
-  agentsStore.agents.filter((a) => a.id).map((a) => ({ label: a.name, value: a.id })),
-);
-
-const selected = computed({
-  get: () => props.modelValue,
-  set: (val: string) => emit('update:modelValue', val),
+  if (agentsStore.agents.length === 0) await agentsStore.fetchAll();
 });
 </script>
 
 <template>
-  <UFormField :label="label">
-    <USelect v-model="selected" :items="items" placeholder="Ajan seçin..." class="w-full" />
-  </UFormField>
+  <div>
+    <label :for="`agent-${label}`" class="field-label">{{ label }}</label>
+    <select
+      :id="`agent-${label}`"
+      :value="modelValue"
+      class="select"
+      @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
+    >
+      <option value="" disabled>Ajan seçin...</option>
+      <option v-for="a in agentsStore.agents" :key="a.id" :value="a.id">{{ a.name }}</option>
+    </select>
+  </div>
 </template>

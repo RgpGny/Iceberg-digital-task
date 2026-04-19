@@ -9,9 +9,9 @@ test.describe('Reports Page', () => {
   test('shows filter form', async ({ page }) => {
     await page.goto('/reports');
     await expect(page.getByText('Filtreler')).toBeVisible();
-    await expect(page.getByLabel('Ajan')).toBeVisible();
-    await expect(page.getByLabel('Başlangıç Tarihi')).toBeVisible();
-    await expect(page.getByLabel('Bitiş Tarihi')).toBeVisible();
+    await expect(page.locator('#filter-agent')).toBeVisible();
+    await expect(page.locator('#filter-from')).toBeVisible();
+    await expect(page.locator('#filter-to')).toBeVisible();
     await expect(page.getByRole('button', { name: 'Raporu Getir' })).toBeVisible();
   });
 
