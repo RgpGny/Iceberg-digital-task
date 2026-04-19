@@ -425,3 +425,40 @@ Floating-point representation of monetary values leads to rounding errors that c
 
 **8. No monorepo tooling.**
 `backend/` and `frontend/` are two independent npm projects. This matches the PDF requirement, keeps CI simple (each project has its own install and build step), and avoids the overhead of Turborepo or pnpm workspaces for a two-package repository.
+
+---
+
+## 13. Security & Credential Hygiene
+
+### 13.1 Secret handling
+
+Secrets are never committed to git. The following files are gitignored:
+
+| File | Contents |
+|---|---|
+| `backend/.env` | `MONGODB_URI`, `CORS_ORIGIN`, `NODE_ENV`, `PORT` |
+| `frontend/.env` | `NUXT_PUBLIC_API_URL` |
+| `.claude/settings.local.json` | MCP server tokens, agent credentials |
+
+Both packages ship a committed `.env.example` with placeholder values so any developer can copy-and-fill without searching for the right variable names.
+
+The Joi validation schema in `backend/src/config/` ensures the process fails fast at startup if any required variable is absent or malformed — misconfiguration is never silent.
+
+### 13.2 No authentication
+
+The system is intentionally single-tenant and unauthenticated (the PDF does not require auth). Network-level protection (Render's HTTPS, MongoDB Atlas IP allowlist `0.0.0.0/0` for Atlas M0) is the only access barrier.
+
+Extending to JWT/session authentication later does not require changes to domain logic — the `AppModule` import list is the only insertion point.
+
+### 13.3 Credential rotation recommendations
+
+After the initial deploy, rotate or review the following on a regular schedule:
+
+| Credential | Where | Action |
+|---|---|---|
+| MongoDB Atlas password | Atlas → Database Access | Rotate every 90 days; update `MONGODB_URI` in Render env |
+| Render deploy key / webhook secret | Render → Settings | Review after any team-member departure |
+| Vercel project token | Vercel → Settings → Tokens | Revoke if stored locally; use Vercel CLI with OAuth instead |
+| GitHub Actions secrets | Repo → Settings → Secrets | Audit after any maintainer role change |
+
+After rotating the MongoDB password, update the `MONGODB_URI` environment variable in Render, then trigger a manual redeploy so the new connection string takes effect without downtime (Render performs a zero-downtime restart for env-var changes).
