@@ -1,50 +1,46 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# Iceberg Transactions Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. Mandatory Stack
+Backend MUST use NestJS 10 with MongoDB Atlas via Mongoose 8. Frontend MUST use Nuxt 3 with Pinia and Tailwind CSS. Runtime is Node.js 20 LTS. These are non-negotiable (PDF technical-case requirement).
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### II. Test-First for Pure Logic (NON-NEGOTIABLE)
+The state machine (`canTransition`) and commission engine (`compute`) MUST be written test-first with Jest. Red → green → refactor. These two functions MUST reach 100% coverage. Other backend business logic MUST reach ≥85%.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### III. API-First
+Every backend endpoint MUST be documented via `@nestjs/swagger` and exposed at `/api/docs`. DTOs are the API contract. Mongoose schemas MUST NOT leak across module boundaries.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### IV. Money Is Always Integer Minor Units
+All monetary values use `{ amount: integer, currency: 'TRY' }` where `amount` is in kuruş. Never floating-point. All arithmetic goes through `backend/src/common/money/`.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### V. Commission Breakdowns Are Immutable
+Once a transaction is completed and the breakdown is written, it MUST NOT be edited or recomputed. Rule changes never retro-edit closed deals.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+### VI. Conventional Commits
+Commit subjects start with `feat:`, `fix:`, `test:`, `docs:`, `chore:`, or `refactor:`. One concern per commit.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### VII. Secrets Never Enter Git
+`.env*` and `.claude/settings.local.json` are gitignored. Any commit containing a credential must be amended before push.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+## Stack Constraints
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+- Node.js 20 LTS
+- TypeScript strict mode
+- Backend: NestJS 10, Mongoose 8, Jest, `class-validator`
+- Frontend: Nuxt 3, Pinia, Nuxt UI (bundles Tailwind), Vitest
+- E2E: Playwright
+- Deploy: Render (backend), Vercel (frontend), MongoDB Atlas M0
+
+## Development Workflow
+
+- Features go through `/speckit-specify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-implement`.
+- Small fixes (typos, lint, copy) may bypass SpecKit.
+- Every PR must pass CI (lint + typecheck + test) before merge.
+- `main` is protected.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes ad-hoc decisions. Amendments require documenting the change in this file and updating CLAUDE.md if it affects agent behavior.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-04-19 | **Last Amended**: 2026-04-19
