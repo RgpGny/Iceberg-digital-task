@@ -19,7 +19,8 @@ export const useTransactionsStore = defineStore('transactions', {
       try {
         const query: Record<string, string> = {};
         if (stage) query.stage = stage;
-        this.list = await api.get<Transaction[]>('/transactions', query);
+        const result = await api.get<Transaction[]>('/transactions', query);
+        this.list = Array.isArray(result) ? result : [];
       } catch (err) {
         this.error = err instanceof Error ? err.message : 'İşlemler yüklenemedi';
       } finally {

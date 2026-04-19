@@ -18,7 +18,9 @@ onMounted(async () => {
   }
 });
 
-const items = computed(() => agentsStore.agents.map((a) => ({ label: a.name, value: a.id })));
+const items = computed(() =>
+  agentsStore.agents.filter((a) => a.id).map((a) => ({ label: a.name, value: a.id })),
+);
 
 const selected = computed({
   get: () => props.modelValue,

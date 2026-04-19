@@ -14,7 +14,8 @@ export const useAgentsStore = defineStore('agents', {
       this.loading = true;
       this.error = null;
       try {
-        this.agents = await api.get<Agent[]>('/agents');
+        const result = await api.get<Agent[]>('/agents');
+        this.agents = Array.isArray(result) ? result : [];
       } catch (err) {
         this.error = err instanceof Error ? err.message : 'Ajanlar yüklenemedi';
       } finally {
