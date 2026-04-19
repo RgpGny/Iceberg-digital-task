@@ -97,7 +97,7 @@ Run: `uv tool update-shell` and open a new terminal.
 - [ ] **Step 5: Initialize SpecKit in the current repo**
 
 Run: `specify init --here --ai claude --ignore-agent-tools`
-Expected: Creates `.specify/` directory with `memory/constitution.md`, templates, and scripts. Adds `/specify`, `/plan`, `/tasks`, `/implement`, `/analyze`, `/constitution` slash commands for Claude Code.
+Expected: Creates `.specify/` directory with `memory/constitution.md`, templates, and scripts. Also creates `.claude/skills/speckit-*/` with Claude Code slash commands (`/speckit-specify`, `/speckit-plan`, `/speckit-tasks`, `/speckit-implement`, `/speckit-analyze`, `/speckit-constitution`, plus a few others) and appends a SPECKIT anchor block to `CLAUDE.md`.
 
 - [ ] **Step 6: Verify SpecKit directory**
 
@@ -160,7 +160,7 @@ Commit subjects start with `feat:`, `fix:`, `test:`, `docs:`, `chore:`, or `refa
 
 ## Development Workflow
 
-- Features go through `/specify` → `/plan` → `/tasks` → `/implement`.
+- Features go through `/speckit-specify` → `/speckit-plan` → `/speckit-tasks` → `/speckit-implement`.
 - Small fixes (typos, lint, copy) may bypass SpecKit.
 - Every PR must pass CI (lint + typecheck + test) before merge.
 - `main` is protected.
