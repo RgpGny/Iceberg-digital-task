@@ -20,7 +20,7 @@ export const useReportsStore = defineStore('reports', {
         if (params.to) query.to = params.to;
         this.report = await api.get<EarningsReport>('/reports/earnings', query);
       } catch (err) {
-        this.error = err instanceof Error ? err.message : 'Rapor yüklenemedi';
+        this.error = err instanceof Error ? err.message : 'Failed to load report';
       } finally {
         this.loading = false;
       }

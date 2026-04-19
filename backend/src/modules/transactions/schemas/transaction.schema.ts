@@ -9,8 +9,8 @@ export class MoneyEmbedded {
   @Prop({ required: true })
   amount!: number;
 
-  @Prop({ required: true, default: 'TRY' })
-  currency!: 'TRY';
+  @Prop({ required: true, default: 'GBP' })
+  currency!: 'GBP';
 }
 export const MoneyEmbeddedSchema = SchemaFactory.createForClass(MoneyEmbedded);
 

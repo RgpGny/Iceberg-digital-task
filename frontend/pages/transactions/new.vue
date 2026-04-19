@@ -7,8 +7,8 @@ const transactionsStore = useTransactionsStore();
 const form = reactive({
   address: '',
   propertyType: 'sale' as PropertyType,
-  listPriceTL: '' as string | number,
-  serviceFeeTL: '' as string | number,
+  listPricePounds: '' as string | number,
+  serviceFeePounds: '' as string | number,
   listingAgentId: '',
   sellingAgentId: '',
 });
@@ -20,23 +20,23 @@ async function submit() {
   validationError.value = '';
 
   if (!form.address.trim()) {
-    validationError.value = 'Adres zorunludur.';
+    validationError.value = 'Address is required.';
     return;
   }
-  if (!form.listPriceTL || Number(form.listPriceTL) <= 0) {
-    validationError.value = 'Liste fiyatı geçerli bir değer olmalıdır.';
+  if (!form.listPricePounds || Number(form.listPricePounds) <= 0) {
+    validationError.value = 'List price must be a valid value.';
     return;
   }
-  if (!form.serviceFeeTL || Number(form.serviceFeeTL) <= 0) {
-    validationError.value = 'Hizmet bedeli geçerli bir değer olmalıdır.';
+  if (!form.serviceFeePounds || Number(form.serviceFeePounds) <= 0) {
+    validationError.value = 'Service fee must be a valid value.';
     return;
   }
   if (!form.listingAgentId) {
-    validationError.value = 'Satışa çıkaran ajan seçilmelidir.';
+    validationError.value = 'Listing agent must be selected.';
     return;
   }
   if (!form.sellingAgentId) {
-    validationError.value = 'Satan ajan seçilmelidir.';
+    validationError.value = 'Selling agent must be selected.';
     return;
   }
 
@@ -46,9 +46,9 @@ async function submit() {
       property: {
         address: form.address.trim(),
         type: form.propertyType,
-        listPrice: { amount: Math.round(Number(form.listPriceTL) * 100), currency: 'TRY' },
+        listPrice: { amount: Math.round(Number(form.listPricePounds) * 100), currency: 'GBP' },
       },
-      serviceFee: { amount: Math.round(Number(form.serviceFeeTL) * 100), currency: 'TRY' },
+      serviceFee: { amount: Math.round(Number(form.serviceFeePounds) * 100), currency: 'GBP' },
       listingAgentId: form.listingAgentId,
       sellingAgentId: form.sellingAgentId,
     });
@@ -73,45 +73,45 @@ async function submit() {
             stroke-linejoin="round"
           />
         </svg>
-        Geri
+        Back
       </button>
       <div>
-        <p class="page-eyebrow" style="margin-bottom: 4px">İşlem Yönetimi</p>
+        <p class="page-eyebrow" style="margin-bottom: 4px">Transaction Management</p>
         <h1 class="f-display-italic" style="font-size: 1.75rem; margin: 0">
-          Yeni İşlem
-          <span style="color: var(--color-accent-light)">Oluştur</span>
+          New Transaction
+          <span style="color: var(--color-accent-light)">Create</span>
         </h1>
       </div>
     </div>
 
     <div class="card">
-      <!-- Mülk Bilgileri -->
+      <!-- Property Information -->
       <div class="card-head">
-        <span class="label">Mülk Bilgileri</span>
+        <span class="label">Property Information</span>
       </div>
       <div class="card-body space-y-5">
         <div>
-          <label for="address" class="field-label">Adres</label>
+          <label for="address" class="field-label">Address</label>
           <input
             id="address"
             v-model="form.address"
             class="input"
-            placeholder="Örn: Kadıköy, İstanbul"
+            placeholder="E.g. London, Greater London"
           />
         </div>
         <div class="grid grid-cols-2 gap-4">
           <div>
-            <label for="propertyType" class="field-label">Mülk Türü</label>
+            <label for="propertyType" class="field-label">Property Type</label>
             <select id="propertyType" v-model="form.propertyType" class="select">
-              <option value="sale">Satış</option>
-              <option value="rental">Kiralık</option>
+              <option value="sale">Sale</option>
+              <option value="rental">Rental</option>
             </select>
           </div>
           <div>
-            <label for="listPrice" class="field-label">Liste Fiyatı (₺)</label>
+            <label for="listPrice" class="field-label">List Price (£)</label>
             <input
               id="listPrice"
-              v-model="form.listPriceTL"
+              v-model="form.listPricePounds"
               type="number"
               min="1"
               class="input"
@@ -120,10 +120,10 @@ async function submit() {
           </div>
         </div>
         <div>
-          <label for="serviceFee" class="field-label">Hizmet Bedeli (₺)</label>
+          <label for="serviceFee" class="field-label">Service Fee (£)</label>
           <input
             id="serviceFee"
-            v-model="form.serviceFeeTL"
+            v-model="form.serviceFeePounds"
             type="number"
             min="1"
             class="input"
@@ -134,19 +134,19 @@ async function submit() {
 
       <div style="border-top: 1px solid var(--color-border)" />
 
-      <!-- Ajanlar -->
+      <!-- Agents -->
       <div class="card-head">
-        <span class="label">Ajanlar</span>
+        <span class="label">Agents</span>
       </div>
       <div class="card-body space-y-4">
-        <AgentPicker v-model="form.listingAgentId" label="Satışa Çıkaran Ajan" />
-        <AgentPicker v-model="form.sellingAgentId" label="Satan Ajan" />
+        <AgentPicker v-model="form.listingAgentId" label="Listing Agent" />
+        <AgentPicker v-model="form.sellingAgentId" label="Selling Agent" />
         <p
           v-if="form.listingAgentId && form.listingAgentId === form.sellingAgentId"
           class="f-display-italic"
           style="font-size: 11.5px; color: var(--color-accent-dim)"
         >
-          Çift rol senaryosu — aynı ajan iki rolü üstleniyor.
+          Dual role scenario — same agent covering both roles.
         </p>
       </div>
 
@@ -177,9 +177,9 @@ async function submit() {
 
       <!-- Actions -->
       <div class="card-foot flex items-center justify-between">
-        <button class="btn btn-ghost" @click="navigateTo('/')">İptal</button>
+        <button class="btn btn-ghost" @click="navigateTo('/')">Cancel</button>
         <button class="btn btn-primary btn-lg" :disabled="submitting" @click="submit">
-          {{ submitting ? 'Oluşturuluyor…' : 'İşlem Oluştur' }}
+          {{ submitting ? 'Creating…' : 'Create Transaction' }}
         </button>
       </div>
     </div>

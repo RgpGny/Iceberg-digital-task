@@ -9,31 +9,31 @@ describe('commission engine', () => {
   describe('50/50 agency rule', () => {
     it('assigns the agency exactly 50 % of the total fee', () => {
       const input: CommissionInput = {
-        totalFee: Money.of(1_000_000, 'TRY'),
+        totalFee: Money.of(1_000_000, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: selling,
       };
       const result = compute(input);
-      expect(result.agencyShare).toEqual({ amount: 500_000, currency: 'TRY' });
+      expect(result.agencyShare).toEqual({ amount: 500_000, currency: 'GBP' });
     });
   });
 
   describe('scenario: same listing and selling agent', () => {
     it('gives the single agent 100 % of the agent portion (= 50 % of total)', () => {
       const input: CommissionInput = {
-        totalFee: Money.of(1_000_000, 'TRY'),
+        totalFee: Money.of(1_000_000, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: listing,
       };
       const result = compute(input);
 
       expect(result.scenario).toBe('same_agent');
-      expect(result.agencyShare).toEqual({ amount: 500_000, currency: 'TRY' });
+      expect(result.agencyShare).toEqual({ amount: 500_000, currency: 'GBP' });
       expect(result.agentShares).toEqual([
         {
           agentId: listing,
           role: 'dual',
-          amount: { amount: 500_000, currency: 'TRY' },
+          amount: { amount: 500_000, currency: 'GBP' },
           percentage: 50,
           rationale: 'Listing and selling agent are the same person — full agent portion (50%).',
         },
@@ -44,7 +44,7 @@ describe('commission engine', () => {
   describe('scenario: different listing and selling agents', () => {
     it('splits the agent portion equally (25 % each of total)', () => {
       const input: CommissionInput = {
-        totalFee: Money.of(1_000_000, 'TRY'),
+        totalFee: Money.of(1_000_000, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: selling,
       };
@@ -56,14 +56,14 @@ describe('commission engine', () => {
       expect(a).toEqual({
         agentId: listing,
         role: 'listing',
-        amount: { amount: 250_000, currency: 'TRY' },
+        amount: { amount: 250_000, currency: 'GBP' },
         percentage: 25,
         rationale: 'Listing agent — 25% of total (half of the agent portion).',
       });
       expect(b).toEqual({
         agentId: selling,
         role: 'selling',
-        amount: { amount: 250_000, currency: 'TRY' },
+        amount: { amount: 250_000, currency: 'GBP' },
         percentage: 25,
         rationale: 'Selling agent — 25% of total (half of the agent portion).',
       });
@@ -73,7 +73,7 @@ describe('commission engine', () => {
   describe('rounding is lossless', () => {
     it('with an odd total, the sum of all shares still equals the total', () => {
       const input: CommissionInput = {
-        totalFee: Money.of(1_000_001, 'TRY'),
+        totalFee: Money.of(1_000_001, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: selling,
       };
@@ -86,7 +86,7 @@ describe('commission engine', () => {
 
     it('with total not divisible by 4, remainder still sums back to total', () => {
       const input: CommissionInput = {
-        totalFee: Money.of(1_000_003, 'TRY'),
+        totalFee: Money.of(1_000_003, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: selling,
       };
@@ -99,7 +99,7 @@ describe('commission engine', () => {
 
     it('same-agent odd total also sums back to total', () => {
       const input: CommissionInput = {
-        totalFee: Money.of(1_000_001, 'TRY'),
+        totalFee: Money.of(1_000_001, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: listing,
       };
@@ -114,7 +114,7 @@ describe('commission engine', () => {
     it('throws BusinessError for zero total fee', () => {
       expect(() =>
         compute({
-          totalFee: Money.of(0, 'TRY'),
+          totalFee: Money.of(0, 'GBP'),
           listingAgentId: listing,
           sellingAgentId: selling,
         }),
@@ -124,7 +124,7 @@ describe('commission engine', () => {
     it('throws BusinessError for negative total fee', () => {
       expect(() =>
         compute({
-          totalFee: Money.of(-100, 'TRY'),
+          totalFee: Money.of(-100, 'GBP'),
           listingAgentId: listing,
           sellingAgentId: selling,
         }),
@@ -134,7 +134,7 @@ describe('commission engine', () => {
     it('throws BusinessError for missing listingAgentId', () => {
       expect(() =>
         compute({
-          totalFee: Money.of(1000, 'TRY'),
+          totalFee: Money.of(1000, 'GBP'),
           listingAgentId: '',
           sellingAgentId: selling,
         }),
@@ -144,7 +144,7 @@ describe('commission engine', () => {
     it('throws BusinessError for missing sellingAgentId', () => {
       expect(() =>
         compute({
-          totalFee: Money.of(1000, 'TRY'),
+          totalFee: Money.of(1000, 'GBP'),
           listingAgentId: listing,
           sellingAgentId: '',
         }),
@@ -155,7 +155,7 @@ describe('commission engine', () => {
   describe('percentage values', () => {
     it('exposes percentages in human units (not fractions)', () => {
       const result: CommissionResult = compute({
-        totalFee: Money.of(1_000_000, 'TRY'),
+        totalFee: Money.of(1_000_000, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: selling,
       });

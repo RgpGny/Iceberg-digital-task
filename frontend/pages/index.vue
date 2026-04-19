@@ -39,15 +39,15 @@ const stageClass: Record<Stage, string> = {
     <!-- Page header -->
     <div class="flex items-end justify-between">
       <div>
-        <p class="page-eyebrow">Gayrimenkul Platformu</p>
+        <p class="page-eyebrow">Real Estate Platform</p>
         <h1 class="page-title">
-          Gayrimenkul
-          <span :style="{ color: 'var(--color-accent-light)' }">İşlemleri</span>
+          Real Estate
+          <span :style="{ color: 'var(--color-accent-light)' }">Transactions</span>
         </h1>
       </div>
       <p style="font-size: 0.8rem; color: var(--color-text-3)">
         {{
-          new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })
+          new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
         }}
       </p>
     </div>
@@ -92,18 +92,18 @@ const stageClass: Record<Stage, string> = {
       <!-- Loading -->
       <div v-if="transactionsStore.loading" class="card-body text-center py-16">
         <p class="f-display-italic" style="font-size: 1.1rem; color: var(--color-text-2)">
-          Yükleniyor…
+          Loading…
         </p>
       </div>
 
       <table v-else class="table">
         <thead>
           <tr>
-            <th>Mülk</th>
-            <th>Tür</th>
-            <th>Hizmet Bedeli</th>
-            <th>Aşama</th>
-            <th>Tarih</th>
+            <th>Property</th>
+            <th>Type</th>
+            <th>Service Fee</th>
+            <th>Stage</th>
+            <th>Date</th>
             <th style="width: 80px" />
           </tr>
         </thead>
@@ -112,10 +112,11 @@ const stageClass: Record<Stage, string> = {
           <tr v-if="transactionsStore.list.length === 0">
             <td colspan="6" class="text-center py-16">
               <p class="f-display-italic" style="font-size: 1.1rem; color: var(--color-text-3)">
-                Kayıt bulunamadı
+                No records found
               </p>
               <p style="font-size: 0.8rem; color: var(--color-text-3); margin-top: 6px">
-                İlk işlemi oluşturmak için sol menüden "Yeni İşlem" butonuna tıklayın
+                Click the "New Transaction" button in the left menu to create your first
+                transaction.
               </p>
             </td>
           </tr>
@@ -125,30 +126,30 @@ const stageClass: Record<Stage, string> = {
             :key="tx.id"
             @click="navigateTo(`/transactions/${tx.id}`)"
           >
-            <td data-label="Mülk">
+            <td data-label="Property">
               <span style="font-weight: 500">{{ tx.property.address }}</span>
             </td>
-            <td data-label="Tür" style="color: var(--color-text-2)">
-              {{ tx.property.type === 'sale' ? 'Satış' : 'Kiralık' }}
+            <td data-label="Type" style="color: var(--color-text-2)">
+              {{ tx.property.type === 'sale' ? 'Sale' : 'Rental' }}
             </td>
-            <td data-label="Hizmet Bedeli">
+            <td data-label="Service Fee">
               <span class="money-sm">{{ formatMoney(tx.serviceFee) }}</span>
             </td>
-            <td data-label="Aşama">
+            <td data-label="Stage">
               <span class="pill" :class="stageClass[tx.stage]">
                 <span class="pill-dot" />
                 {{ STAGE_LABELS[tx.stage] }}
               </span>
             </td>
-            <td data-label="Tarih" style="color: var(--color-text-3); font-size: 0.8rem">
-              {{ new Date(tx.createdAt).toLocaleDateString('tr-TR') }}
+            <td data-label="Date" style="color: var(--color-text-3); font-size: 0.8rem">
+              {{ new Date(tx.createdAt).toLocaleDateString('en-GB') }}
             </td>
             <td data-label="">
               <button
                 class="btn btn-ghost btn-sm"
                 @click.stop="navigateTo(`/transactions/${tx.id}`)"
               >
-                Görüntüle
+                View
               </button>
             </td>
           </tr>

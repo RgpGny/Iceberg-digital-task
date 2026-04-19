@@ -12,7 +12,7 @@ const currentIndex = computed(() => STAGE_ORDER.indexOf(props.stage));
 function getStageDate(s: Stage): string | null {
   const entry = props.stageHistory.find((h) => h.to === s);
   if (!entry) return null;
-  return new Date(entry.at).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' });
+  return new Date(entry.at).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
 }
 
 function stageStatus(s: Stage): 'completed' | 'current' | 'upcoming' {

@@ -41,9 +41,9 @@ describe('TransactionsService', () => {
       property: {
         address: 'Kadıköy',
         type: 'sale',
-        listPrice: { amount: 10_000_000, currency: 'TRY' },
+        listPrice: { amount: 10_000_000, currency: 'GBP' },
       },
-      serviceFee: { amount: 1_000_000, currency: 'TRY' },
+      serviceFee: { amount: 1_000_000, currency: 'GBP' },
       listingAgentId: listingId,
       sellingAgentId: sellingId,
     });

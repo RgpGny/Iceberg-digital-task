@@ -39,7 +39,7 @@ describe('CommissionsService', () => {
   it('writes a breakdown for a different-agents scenario', async () => {
     const dto = await service.writeForTransaction({
       transactionId: txId,
-      totalFee: Money.of(1_000_000, 'TRY'),
+      totalFee: Money.of(1_000_000, 'GBP'),
       listingAgentId: listing,
       sellingAgentId: selling,
     });
@@ -53,7 +53,7 @@ describe('CommissionsService', () => {
     await expect(
       service.writeForTransaction({
         transactionId: txId,
-        totalFee: Money.of(2_000_000, 'TRY'),
+        totalFee: Money.of(2_000_000, 'GBP'),
         listingAgentId: listing,
         sellingAgentId: selling,
       }),

@@ -160,10 +160,10 @@ Immutable snapshot written once on stage → `completed`. Not recomputed. Gives 
 ### `Money` value object
 
 ```ts
-{ amount: number, currency: 'TRY' }
+{ amount: number, currency: 'GBP' }
 ```
 
-`amount` is an integer in **minor units** (kuruş) to avoid floating-point error. All arithmetic goes through a single `Money` helper.
+`amount` is an integer in **minor units** (pence) to avoid floating-point error. All arithmetic goes through a single `Money` helper.
 
 ### Rationale (mirrored into DESIGN.md)
 

@@ -24,7 +24,7 @@ onMounted(async () => {
       class="select"
       @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value)"
     >
-      <option value="" disabled>Ajan seçin...</option>
+      <option value="" disabled>Select agent...</option>
       <option v-for="a in agentsStore.agents" :key="a.id" :value="a.id">{{ a.name }}</option>
     </select>
   </div>

@@ -30,9 +30,9 @@ describe('Transactions (e2e)', () => {
         property: {
           address: 'Kadıköy',
           type: 'sale',
-          listPrice: { amount: 10_000_000, currency: 'TRY' },
+          listPrice: { amount: 10_000_000, currency: 'GBP' },
         },
-        serviceFee: { amount: 1_000_000, currency: 'TRY' },
+        serviceFee: { amount: 1_000_000, currency: 'GBP' },
         listingAgentId: listingId,
         sellingAgentId: sellingId,
       })
@@ -60,9 +60,9 @@ describe('Transactions (e2e)', () => {
         property: {
           address: 'Bakırköy',
           type: 'sale',
-          listPrice: { amount: 5_000_000, currency: 'TRY' },
+          listPrice: { amount: 5_000_000, currency: 'GBP' },
         },
-        serviceFee: { amount: 500_000, currency: 'TRY' },
+        serviceFee: { amount: 500_000, currency: 'GBP' },
         listingAgentId: listingId,
         sellingAgentId: sellingId,
       });

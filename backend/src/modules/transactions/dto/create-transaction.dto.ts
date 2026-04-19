@@ -11,14 +11,14 @@ import {
 import { ApiProperty } from '@nestjs/swagger';
 
 export class MoneyDto {
-  @ApiProperty({ example: 1_000_000, description: 'Amount in minor units (kuruş)' })
+  @ApiProperty({ example: 1_000_000, description: 'Amount in minor units (pence)' })
   @IsInt()
   @Min(1)
   amount!: number;
 
-  @ApiProperty({ example: 'TRY', enum: ['TRY'] })
-  @IsEnum(['TRY'])
-  currency!: 'TRY';
+  @ApiProperty({ example: 'GBP', enum: ['GBP'] })
+  @IsEnum(['GBP'])
+  currency!: 'GBP';
 }
 
 export class PropertyDto {

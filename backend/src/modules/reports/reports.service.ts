@@ -42,10 +42,10 @@ export class ReportsService {
     }
 
     return {
-      agencyTotal: { amount: agencyAmount, currency: 'TRY' },
+      agencyTotal: { amount: agencyAmount, currency: 'GBP' },
       agents: [...byAgent.entries()].map(([agentId, v]) => ({
         agentId,
-        total: { amount: v.amount, currency: 'TRY' },
+        total: { amount: v.amount, currency: 'GBP' },
         transactionCount: v.count,
       })),
     };

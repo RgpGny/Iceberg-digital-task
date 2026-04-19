@@ -78,7 +78,7 @@ export class CommissionsService {
         (s: {
           agentId: Types.ObjectId;
           role: string;
-          amount: { amount: number; currency: 'TRY' };
+          amount: { amount: number; currency: 'GBP' };
           percentage: number;
           rationale: string;
         }) => ({

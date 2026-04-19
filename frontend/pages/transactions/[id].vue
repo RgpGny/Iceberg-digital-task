@@ -52,10 +52,10 @@ const stagePillClass: Record<string, string> = {
             stroke-linejoin="round"
           />
         </svg>
-        Tüm İşlemler
+        All Transactions
       </button>
       <div>
-        <p class="page-eyebrow" style="margin-bottom: 4px">İşlem Detayı</p>
+        <p class="page-eyebrow" style="margin-bottom: 4px">Transaction Detail</p>
         <h1 v-if="tx" class="f-display-italic" style="font-size: 1.75rem; margin: 0">
           {{ tx.property.address }}
         </h1>
@@ -64,9 +64,7 @@ const stagePillClass: Record<string, string> = {
 
     <!-- Loading -->
     <div v-if="transactionsStore.loading && !tx" class="text-center py-20">
-      <p class="f-display-italic" style="font-size: 1.1rem; color: var(--color-text-3)">
-        Yükleniyor…
-      </p>
+      <p class="f-display-italic" style="font-size: 1.1rem; color: var(--color-text-3)">Loading…</p>
     </div>
 
     <!-- Error -->
@@ -80,7 +78,7 @@ const stagePillClass: Record<string, string> = {
         <!-- Property info -->
         <div class="card">
           <div class="card-head">
-            <span class="label">Mülk Bilgileri</span>
+            <span class="label">Property Information</span>
             <span class="pill" :class="stagePillClass[tx.stage]">
               <span class="pill-dot" />
               {{ STAGE_LABELS[tx.stage] }}
@@ -88,18 +86,18 @@ const stagePillClass: Record<string, string> = {
           </div>
           <div class="card-body space-y-4">
             <div>
-              <p class="detail-key">Adres</p>
+              <p class="detail-key">Address</p>
               <p class="detail-val" style="font-weight: 500">{{ tx.property.address }}</p>
             </div>
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <p class="detail-key">Tür</p>
-                <p class="detail-val">{{ tx.property.type === 'sale' ? 'Satış' : 'Kiralık' }}</p>
+                <p class="detail-key">Type</p>
+                <p class="detail-val">{{ tx.property.type === 'sale' ? 'Sale' : 'Rental' }}</p>
               </div>
               <div v-if="tx.completedAt">
-                <p class="detail-key">Tamamlandı</p>
+                <p class="detail-key">Completed</p>
                 <p class="detail-val">
-                  {{ new Date(tx.completedAt).toLocaleDateString('tr-TR') }}
+                  {{ new Date(tx.completedAt).toLocaleDateString('en-GB') }}
                 </p>
               </div>
             </div>
@@ -110,7 +108,7 @@ const stagePillClass: Record<string, string> = {
                 padding: 12px 14px;
               "
             >
-              <p class="detail-key" style="margin-bottom: 2px">Liste Fiyatı</p>
+              <p class="detail-key" style="margin-bottom: 2px">List Price</p>
               <p class="money-lg" style="font-size: 1.4rem">
                 {{ formatMoney(tx.property.listPrice) }}
               </p>
@@ -124,7 +122,7 @@ const stagePillClass: Record<string, string> = {
               "
             >
               <p class="detail-key" style="margin-bottom: 2px; color: var(--color-accent-dim)">
-                Hizmet Bedeli
+                Service Fee
               </p>
               <p class="money-xl" style="font-size: 1.4rem">{{ formatMoney(tx.serviceFee) }}</p>
             </div>
@@ -136,12 +134,12 @@ const stagePillClass: Record<string, string> = {
           <!-- Agents -->
           <div class="card">
             <div class="card-head">
-              <span class="label">Ajanlar</span>
+              <span class="label">Agents</span>
             </div>
             <div class="card-body space-y-3">
               <div class="flex items-center justify-between">
                 <div>
-                  <p class="detail-key">Satışa Çıkaran</p>
+                  <p class="detail-key">Listing Agent</p>
                   <p class="detail-val" style="font-weight: 500">
                     {{ agentName(tx.listingAgentId) }}
                   </p>
@@ -151,7 +149,7 @@ const stagePillClass: Record<string, string> = {
               <div style="border-top: 1px solid var(--color-border)" />
               <div class="flex items-center justify-between">
                 <div>
-                  <p class="detail-key">Satan</p>
+                  <p class="detail-key">Selling Agent</p>
                   <p class="detail-val" style="font-weight: 500">
                     {{ agentName(tx.sellingAgentId) }}
                   </p>
@@ -175,7 +173,7 @@ const stagePillClass: Record<string, string> = {
       <!-- Stage timeline -->
       <div class="card">
         <div class="card-head">
-          <span class="label">Aşama Durumu</span>
+          <span class="label">Stage Status</span>
         </div>
         <div class="card-body">
           <StageTimeline :stage="tx.stage" :stage-history="tx.stageHistory" />
@@ -185,7 +183,7 @@ const stagePillClass: Record<string, string> = {
       <!-- History log -->
       <div v-if="tx.stageHistory.length > 0" class="card">
         <div class="card-head">
-          <span class="label">Geçmiş Kayıtları</span>
+          <span class="label">History</span>
         </div>
         <div class="card-body space-y-0">
           <div v-for="(entry, i) in [...tx.stageHistory].reverse()" :key="i" class="log-entry">
@@ -198,7 +196,7 @@ const stagePillClass: Record<string, string> = {
                   <span style="font-weight: 500">{{ STAGE_LABELS[entry.to] }}</span>
                 </template>
                 <template v-else>
-                  <span style="color: var(--color-text-2)">Başlangıç:</span>
+                  <span style="color: var(--color-text-2)">Started:</span>
                   <span style="font-weight: 500; margin-left: 4px">{{
                     STAGE_LABELS[entry.to]
                   }}</span>
@@ -217,7 +215,7 @@ const stagePillClass: Record<string, string> = {
               style="font-size: 0.72rem; color: var(--color-text-3); white-space: nowrap"
             >
               {{
-                new Date(entry.at).toLocaleString('tr-TR', {
+                new Date(entry.at).toLocaleString('en-GB', {
                   day: '2-digit',
                   month: '2-digit',
                   hour: '2-digit',

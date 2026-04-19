@@ -49,7 +49,7 @@ describe('ReportsService', () => {
             {
               agentId: listing,
               role: 'dual',
-              amount: { amount: agentPortion, currency: 'TRY' },
+              amount: { amount: agentPortion, currency: 'GBP' },
               percentage: 50,
               rationale: 'seeded',
             },
@@ -58,22 +58,22 @@ describe('ReportsService', () => {
             {
               agentId: listing,
               role: 'listing',
-              amount: { amount: Math.ceil(agentPortion / 2), currency: 'TRY' },
+              amount: { amount: Math.ceil(agentPortion / 2), currency: 'GBP' },
               percentage: 25,
               rationale: 'seeded',
             },
             {
               agentId: selling,
               role: 'selling',
-              amount: { amount: Math.floor(agentPortion / 2), currency: 'TRY' },
+              amount: { amount: Math.floor(agentPortion / 2), currency: 'GBP' },
               percentage: 25,
               rationale: 'seeded',
             },
           ];
     await model.create({
       transactionId: new Types.ObjectId(),
-      totalFee: { amount: totalMinor, currency: 'TRY' },
-      agencyShare: { amount: agency, currency: 'TRY' },
+      totalFee: { amount: totalMinor, currency: 'GBP' },
+      agencyShare: { amount: agency, currency: 'GBP' },
       agentShares: shares,
       scenario,
     });

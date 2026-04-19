@@ -35,7 +35,7 @@ README.md    PDF-required install/run guide + live URLs
 
 ## 4. Invariants — never break these
 
-1. **Money is always integer minor units** (kuruş). Every monetary value passes through `backend/src/common/money/`. No floating-point `amount`. Never.
+1. **Money is always integer minor units** (pence). Every monetary value passes through `backend/src/common/money/`. No floating-point `amount`. Never.
 2. **Commission breakdowns are immutable.** Once a transaction is `completed` and the breakdown is written, do not edit or recompute it. Rule changes do not retro-edit closed deals.
 3. **State machine is pure and total.** `agreement → earnest_money → title_deed → completed`. No skipping, no backward moves. Invalid transitions throw `BusinessError`. The function is tested in isolation; do not inline stage logic inside controllers or services.
 4. **DTOs are the API contract.** Mongoose schemas live behind services. Controllers return DTOs. Never leak a raw Mongoose document across a module boundary.

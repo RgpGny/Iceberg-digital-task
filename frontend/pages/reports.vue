@@ -34,35 +34,35 @@ function agentName(agentId: string): string {
   <div class="max-w-5xl mx-auto space-y-8">
     <!-- Header -->
     <div>
-      <p class="page-eyebrow">Finansal Analiz</p>
+      <p class="page-eyebrow">Financial Analysis</p>
       <h1 class="page-title">
-        Kazanç
-        <span style="color: var(--color-accent-light)">Raporu</span>
+        Earnings
+        <span style="color: var(--color-accent-light)">Report</span>
       </h1>
     </div>
 
     <!-- Filters -->
     <div class="card">
       <div class="card-head">
-        <span class="label">Filtreler</span>
+        <span class="label">Filters</span>
       </div>
       <div class="card-body">
         <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 items-end">
           <div>
-            <label for="filter-agent" class="field-label">Ajan</label>
+            <label for="filter-agent" class="field-label">Agent</label>
             <select id="filter-agent" v-model="filters.agentId" class="select">
-              <option value="__all__">Tüm Ajanlar</option>
+              <option value="__all__">All Agents</option>
               <option v-for="a in agentsStore.agents" :key="a.id" :value="a.id">
                 {{ a.name }}
               </option>
             </select>
           </div>
           <div>
-            <label for="filter-from" class="field-label">Başlangıç Tarihi</label>
+            <label for="filter-from" class="field-label">Start Date</label>
             <input id="filter-from" v-model="filters.from" type="date" class="input" />
           </div>
           <div>
-            <label for="filter-to" class="field-label">Bitiş Tarihi</label>
+            <label for="filter-to" class="field-label">End Date</label>
             <input id="filter-to" v-model="filters.to" type="date" class="input" />
           </div>
           <div>
@@ -71,7 +71,7 @@ function agentName(agentId: string): string {
               :disabled="reportsStore.loading"
               @click="applyFilters"
             >
-              {{ reportsStore.loading ? 'Hesaplanıyor…' : 'Raporu Getir' }}
+              {{ reportsStore.loading ? 'Calculating…' : 'Generate Report' }}
             </button>
           </div>
         </div>
@@ -99,13 +99,13 @@ function agentName(agentId: string): string {
         >
           <div class="card-body">
             <p class="label" style="color: var(--color-accent-dim); margin-bottom: 8px">
-              Acenta Geliri
+              Agency Revenue
             </p>
             <p class="money-xl" style="font-size: 2.2rem">
               {{ formatMoney(reportsStore.report.agencyTotal) }}
             </p>
             <p style="font-size: 0.75rem; color: var(--color-text-3); margin-top: 6px">
-              Tamamlanan işlemlerden elde edilen toplam acenta payı
+              Total agency share from completed transactions
             </p>
           </div>
         </div>
@@ -113,12 +113,12 @@ function agentName(agentId: string): string {
         <!-- Agent count -->
         <div class="card">
           <div class="card-body">
-            <p class="label" style="margin-bottom: 8px">Aktif Ajan</p>
+            <p class="label" style="margin-bottom: 8px">Active Agent</p>
             <p class="f-display" style="font-size: 2.2rem; color: var(--color-text)">
               {{ reportsStore.report.agents.length }}
             </p>
             <p style="font-size: 0.75rem; color: var(--color-text-3); margin-top: 6px">
-              Bu dönemde komisyon kazanan ajan sayısı
+              Number of agents earning commission in this period
             </p>
           </div>
         </div>
@@ -127,32 +127,32 @@ function agentName(agentId: string): string {
       <!-- Agent earnings table -->
       <div class="card overflow-hidden">
         <div class="card-head">
-          <span class="label">Ajan Bazlı Kazançlar</span>
+          <span class="label">Agent Earnings</span>
         </div>
 
         <div v-if="reportsStore.report.agents.length === 0" class="card-body text-center py-12">
           <p class="f-display-italic" style="font-size: 1rem; color: var(--color-text-3)">
-            Bu filtreye ait kazanç bulunamadı
+            No earnings found for this filter
           </p>
         </div>
 
         <table v-else class="table">
           <thead>
             <tr>
-              <th>Ajan</th>
-              <th style="text-align: center">İşlem Sayısı</th>
-              <th style="text-align: right">Toplam Kazanç</th>
+              <th>Agent</th>
+              <th style="text-align: center">Transaction Count</th>
+              <th style="text-align: right">Total Earnings</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="row in reportsStore.report.agents" :key="row.agentId">
-              <td data-label="Ajan">
+              <td data-label="Agent">
                 <div class="flex items-center gap-3">
                   <div class="avatar avatar-sm">{{ agentName(row.agentId).charAt(0) }}</div>
                   <span style="font-weight: 500">{{ agentName(row.agentId) }}</span>
                 </div>
               </td>
-              <td data-label="İşlem Sayısı" style="text-align: center">
+              <td data-label="Transaction Count" style="text-align: center">
                 <span
                   style="
                     display: inline-block;
@@ -167,7 +167,7 @@ function agentName(agentId: string): string {
                   {{ row.transactionCount }}
                 </span>
               </td>
-              <td data-label="Toplam Kazanç" style="text-align: right">
+              <td data-label="Total Earnings" style="text-align: right">
                 <span class="money-sm">{{ formatMoney(row.total) }}</span>
               </td>
             </tr>

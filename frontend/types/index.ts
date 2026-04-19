@@ -5,7 +5,7 @@ export type CommissionScenario = 'same_agent' | 'different_agents';
 
 export interface Money {
   amount: number;
-  currency: 'TRY';
+  currency: 'GBP';
 }
 
 export interface Property {
@@ -83,10 +83,10 @@ export interface CreateTransactionPayload {
 export const STAGE_ORDER: Stage[] = ['agreement', 'earnest_money', 'title_deed', 'completed'];
 
 export const STAGE_LABELS: Record<Stage, string> = {
-  agreement: 'Anlaşma',
-  earnest_money: 'Kapora',
-  title_deed: 'Tapu',
-  completed: 'Tamamlandı',
+  agreement: 'Agreement',
+  earnest_money: 'Earnest Money',
+  title_deed: 'Title Deed',
+  completed: 'Completed',
 };
 
 export function nextStage(current: Stage): Stage | null {
@@ -95,7 +95,7 @@ export function nextStage(current: Stage): Stage | null {
 }
 
 export function formatMoney(money: Money): string {
-  return (money.amount / 100).toLocaleString('tr-TR', {
+  return (money.amount / 100).toLocaleString('en-GB', {
     style: 'currency',
     currency: money.currency,
   });

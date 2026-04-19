@@ -43,14 +43,14 @@ function cancel() {
   <div v-if="next" class="space-y-3">
     <div v-if="showNoteInput" class="space-y-3">
       <div>
-        <label class="field-label">Not (isteğe bağlı)</label>
-        <input v-model="note" class="input" placeholder="Aşama geçişi için not ekleyin…" />
+        <label class="field-label">Note (optional)</label>
+        <input v-model="note" class="input" placeholder="Add a note for stage transition…" />
       </div>
       <div class="flex items-center gap-2">
         <button class="btn btn-primary" :disabled="loading" @click="handleTransition">
-          {{ loading ? 'İşleniyor…' : `${STAGE_LABELS[next]} Aşamasına İlerlet` }}
+          {{ loading ? 'Processing…' : `Advance to ${STAGE_LABELS[next]}` }}
         </button>
-        <button class="btn btn-ghost" :disabled="loading" @click="cancel">İptal</button>
+        <button class="btn btn-ghost" :disabled="loading" @click="cancel">Cancel</button>
       </div>
     </div>
     <div v-else>
@@ -64,7 +64,7 @@ function cancel() {
             stroke-linejoin="round"
           />
         </svg>
-        {{ STAGE_LABELS[next] }} Aşamasına İlerlet
+        Advance to {{ STAGE_LABELS[next] }}
       </button>
     </div>
   </div>

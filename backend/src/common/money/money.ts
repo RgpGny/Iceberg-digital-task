@@ -1,4 +1,4 @@
-export type Currency = 'TRY';
+export type Currency = 'GBP';
 
 export interface Money {
   readonly amount: number;
@@ -8,7 +8,7 @@ export interface Money {
 export const Money = {
   of(amount: number, currency: Currency): Money {
     if (!Number.isInteger(amount)) {
-      throw new Error('Money.amount must be an integer (minor units, e.g. kuruş)');
+      throw new Error('Money.amount must be an integer (minor units, e.g. pence)');
     }
     return { amount, currency };
   },
