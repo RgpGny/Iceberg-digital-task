@@ -36,6 +36,32 @@ describe('Stage state machine', () => {
     });
   });
 
+  describe('defensive guards against unknown stage values', () => {
+    // Runtime-only safety: if a corrupt Mongo doc surfaces an unknown stage
+    // string, the state machine must not silently accept any transition.
+    it('canTransition returns false when `from` is not a known stage', () => {
+      expect(canTransition('unknown_from' as Stage, 'earnest_money')).toBe(false);
+    });
+
+    it('canTransition returns false when `to` is not a known stage', () => {
+      expect(canTransition('agreement', 'unknown_to' as Stage)).toBe(false);
+    });
+
+    it('canTransition returns false when both are unknown', () => {
+      expect(canTransition('x' as Stage, 'y' as Stage)).toBe(false);
+    });
+
+    it('nextStage returns null when the input stage is unknown', () => {
+      expect(nextStage('unknown_stage' as Stage)).toBeNull();
+    });
+
+    it('assertValidTransition throws BusinessError when `from` is unknown', () => {
+      expect(() => assertValidTransition('unknown' as Stage, 'earnest_money')).toThrow(
+        'Illegal stage transition',
+      );
+    });
+  });
+
   describe('nextStage', () => {
     it('returns the single legal next stage for non-terminal stages', () => {
       expect(nextStage('agreement')).toBe('earnest_money');
