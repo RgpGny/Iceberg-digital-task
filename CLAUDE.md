@@ -73,12 +73,12 @@ Full list will land in the respective `package.json`s and README.md during imple
 
 ### SpecKit-driven development
 
-Every non-trivial feature goes through:
+Every non-trivial feature goes through (commands are namespaced under `/speckit-` because SpecKit 0.7.4+ installs them that way):
 
-1. `/specify <feature description>` — produces a feature spec under `.specify/specs/`
-2. `/plan` — generates an implementation plan against the constitution
-3. `/tasks` — breaks the plan into reviewable tasks
-4. `/implement` — executes the tasks
+1. `/speckit-specify <feature description>` — produces a feature spec under `.specify/specs/`
+2. `/speckit-plan` — generates an implementation plan against the constitution
+3. `/speckit-tasks` — breaks the plan into reviewable tasks
+4. `/speckit-implement` — executes the tasks
 
 Do not skip straight to code on architectural changes. Small fixes (typos, lint, copy) can bypass SpecKit.
 
@@ -151,3 +151,8 @@ Live URLs (to be filled in after first deploy) go in `README.md`.
 2. Check `DESIGN.md` — implementation-level architectural decisions (once written).
 3. Check `docs/technical-case.pdf` — the source brief.
 4. If still unsure, stop and ask the user. Do not improvise on architectural questions.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
