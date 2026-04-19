@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 import { envValidationSchema } from './config/env.validation';
 import { AgentsModule } from './modules/agents/agents.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
+import { CommissionsModule } from './modules/commissions/commissions.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     }),
     AgentsModule,
     TransactionsModule,
+    CommissionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
