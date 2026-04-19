@@ -9,8 +9,15 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
 
+  const allowedOrigins = config.getOrThrow<string>('CORS_ORIGIN').split(',');
   app.enableCors({
-    origin: config.getOrThrow<string>('CORS_ORIGIN').split(','),
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.some((o) => origin === o || origin.endsWith('.vercel.app'))) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     credentials: true,
   });
 
