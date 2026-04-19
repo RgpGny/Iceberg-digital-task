@@ -151,3 +151,8 @@ Live URLs (to be filled in after first deploy) go in `README.md`.
 2. Check `DESIGN.md` — implementation-level architectural decisions (once written).
 3. Check `docs/technical-case.pdf` — the source brief.
 4. If still unsure, stop and ask the user. Do not improvise on architectural questions.
+
+<!-- SPECKIT START -->
+For additional context about technologies to be used, project structure,
+shell commands, and other important information, read the current plan
+<!-- SPECKIT END -->
