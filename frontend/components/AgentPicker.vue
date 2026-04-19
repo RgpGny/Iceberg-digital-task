@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useAgentsStore } from '~/stores/agents';
 
-const props = defineProps<{
+defineProps<{
   modelValue: string;
   label: string;
 }>();
