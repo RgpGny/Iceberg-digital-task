@@ -60,9 +60,9 @@ async function submit() {
 </script>
 
 <template>
-  <div class="max-w-2xl mx-auto">
+  <div class="max-w-2xl mx-auto px-4 sm:px-0">
     <!-- Header -->
-    <div class="flex items-center gap-4 mb-10">
+    <div class="flex items-center gap-4 mb-6 sm:mb-10">
       <button class="btn btn-ghost btn-sm" @click="navigateTo('/')">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path
@@ -99,7 +99,7 @@ async function submit() {
             placeholder="E.g. London, Greater London"
           />
         </div>
-        <div class="grid grid-cols-2 gap-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label for="propertyType" class="field-label">Property Type</label>
             <select id="propertyType" v-model="form.propertyType" class="select">

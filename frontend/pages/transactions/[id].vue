@@ -39,7 +39,7 @@ const stagePillClass: Record<string, string> = {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto space-y-6">
+  <div class="max-w-4xl mx-auto space-y-6 px-4 sm:px-0">
     <!-- Header -->
     <div class="flex items-center gap-4">
       <button class="btn btn-ghost btn-sm" @click="navigateTo('/')">

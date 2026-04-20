@@ -40,7 +40,7 @@ const scenarioLabel = props.breakdown.scenario === 'same_agent' ? 'Same Agent' :
 
     <div class="card-body space-y-5">
       <!-- Totals -->
-      <div class="grid grid-cols-2 gap-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div
           style="background: var(--color-surface-2); border-radius: var(--radius-md); padding: 14px"
         >

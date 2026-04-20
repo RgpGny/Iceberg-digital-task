@@ -35,9 +35,9 @@ const stageClass: Record<Stage, string> = {
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-6 py-10 space-y-8">
+  <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 sm:py-10 space-y-8">
     <!-- Page header -->
-    <div class="flex items-end justify-between">
+    <div class="flex items-start justify-between gap-3">
       <div>
         <p class="page-eyebrow">Real Estate Platform</p>
         <h1 class="page-title">
@@ -45,7 +45,10 @@ const stageClass: Record<Stage, string> = {
           <span :style="{ color: 'var(--color-accent-light)' }">Transactions</span>
         </h1>
       </div>
-      <p style="font-size: 0.8rem; color: var(--color-text-3)">
+      <p
+        class="page-date"
+        style="font-size: 0.8rem; color: var(--color-text-3); padding-top: 4px; white-space: nowrap"
+      >
         {{
           new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
         }}

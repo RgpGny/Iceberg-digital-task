@@ -31,7 +31,7 @@ function agentName(agentId: string): string {
 </script>
 
 <template>
-  <div class="max-w-5xl mx-auto space-y-8">
+  <div class="max-w-5xl mx-auto space-y-8 px-4 sm:px-0">
     <!-- Header -->
     <div>
       <p class="page-eyebrow">Financial Analysis</p>
